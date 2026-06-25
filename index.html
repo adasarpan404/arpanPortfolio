@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Arpan Das — Backend Software Engineer with 4+ years building high-throughput distributed systems on Node.js and AWS. Messaging platforms, event-driven architectures, millions of events daily.">
+  <meta name="author" content="Arpan Das">
+  <title>Arpan Das — Architect of Spirals</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            paper: '#F5F0E8',
+            ink: '#2C1F14',
+            'oil-umber': '#8B4513',
+            'warm-brown': '#C19A6B',
+            'oil-red': '#C44D2A',
+            ember: '#E85D3A',
+            'teal-glow': '#2A9D8F',
+            charcoal: '#1A1410',
+          },
+          fontFamily: {
+            sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
+          },
+          animation: {
+            'slow-spin': 'slow-spin 60s linear infinite',
+          },
+          keyframes: {
+            'slow-spin': {
+              from: { transform: 'rotate(0deg)' },
+              to: { transform: 'rotate(360deg)' },
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- SVG Filters -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <filter id="sketch-wobble" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="3" result="noise"/>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="2" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <filter id="pencil-sketch">
+        <feColorMatrix type="saturate" values="0.3"/>
+        <feComponentTransfer>
+          <feFuncR type="linear" slope="1.2" intercept="-0.1"/>
+          <feFuncG type="linear" slope="1.2" intercept="-0.1"/>
+          <feFuncB type="linear" slope="1.2" intercept="-0.1"/>
+        </feComponentTransfer>
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Paper Canvas Background -->
+  <div class="paper-canvas" aria-hidden="true"></div>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-trail" aria-hidden="true"></div>
+  <div class="cursor-dot" aria-hidden="true"></div>
+  <svg class="cursor-pencil" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+    <path d="M2 18 L6 14 L16 4 L18 6 L8 16 Z" fill="var(--ink)" opacity="0.7"/>
+    <path d="M6 14 L2 18 L4 16 Z" fill="var(--oil-umber)"/>
+  </svg>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="loading-screen">
+    <img
+      src="assets/uzumaki-spiral.png"
+      alt=""
+      width="96"
+      height="96"
+      class="sketch-img spiral-loader w-24 h-24 mb-4 opacity-80"
+      aria-hidden="true"
+    >
+    <p class="text-ink text-sm tracking-widest uppercase opacity-60">Unfurling manuscript…</p>
+  </div>
+
+  <!-- Theme Toggle -->
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="5"/>
+      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+  </button>
+
+  <!-- Navigation -->
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="#about">Journal</a>
+    <a href="#pantry">Pantry</a>
+    <a href="#experience">Kitchen</a>
+    <a href="#projects">Recipes</a>
+    <a href="#education">Diploma</a>
+    <a href="#contact">Connect</a>
+  </nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════ -->
+  <header id="hero" class="min-h-screen flex items-center justify-center relative overflow-hidden px-6">
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <!-- Pencil sketch avatar -->
+      <div class="w-40 h-40 md:w-48 md:h-48 mx-auto mb-8 avatar-sketch">
+        <img
+          src="https://avatars.githubusercontent.com/u/64941823?v=4"
+          alt="Arpan Das — pencil sketch portrait"
+          width="192"
+          height="192"
+          loading="eager"
+        >
+        <div class="oil-fill"></div>
+      </div>
+
+      <p class="text-sm uppercase tracking-[0.3em] text-warm-brown mb-4 jitter-text">The Architect of Spirals</p>
+
+      <h1 class="text-5xl md:text-7xl font-bold tracking-tighter text-ink hero-title opacity-0">Arpan Das</h1>
+
+      <p class="text-lg md:text-2xl mt-6 text-warm-brown italic max-w-2xl mx-auto hero-tagline opacity-0">
+        "From Kafka's beetle to Nietzsche's hammer — I architect spirals that never break."
+      </p>
+
+      <p class="mt-4 text-base text-ink/70 max-w-xl mx-auto hero-tagline opacity-0 flex items-center justify-center flex-wrap gap-2">
+        <span class="beetle-motif" title="Kafka's Metamorphosis — beetle to Lambda">
+          <img src="assets/metamorphosis-beetle.png" alt="Kafka Metamorphosis sketch — beetle transforming into Lambda" width="40" height="40" loading="lazy">
+        </span>
+        Backend Software Engineer · 4+ Years · Node.js & AWS · Millions of Events Daily
+      </p>
+
+      <div class="mt-12 flex gap-4 md:gap-6 justify-center flex-wrap hero-cta opacity-0">
+        <a href="#experience" class="px-6 md:px-8 py-3 md:py-4 border-2 border-ink text-ink hover:bg-ink hover:text-paper transition-all text-base md:text-lg font-medium sketch-button">
+          View the Metamorphosis
+        </a>
+        <a href="https://github.com/adasarpan404" target="_blank" rel="noopener noreferrer" class="px-6 md:px-8 py-3 md:py-4 bg-oil-umber text-paper hover:scale-105 transition sketch-button-filled">
+          GitHub Repository
+        </a>
+      </div>
+
+      <div class="mt-12 md:mt-16 text-sm flex justify-center gap-6 md:gap-8 flex-wrap hero-contact opacity-0">
+        <a href="tel:+917534927815" class="hover:text-teal-glow transition">+91 75349 27915</a>
+        <a href="mailto:dasarpan471@gmail.com" class="hover:text-teal-glow transition">dasarpan471@gmail.com</a>
+      </div>
+    </div>
+
+    <!-- Uzumaki spiral accents -->
+    <img
+      src="assets/uzumaki-spiral.png"
+      alt=""
+      width="128"
+      height="128"
+      class="sketch-img motif-float spin-slow absolute bottom-10 right-6 md:right-10 w-20 md:w-32 opacity-20 md:opacity-25 parallax-layer"
+      data-speed="0.2"
+      aria-hidden="true"
+      loading="lazy"
+    >
+    <img
+      src="assets/uzumaki-cluster.png"
+      alt=""
+      width="112"
+      height="112"
+      class="sketch-img motif-float spin-reverse absolute top-16 left-6 md:left-10 w-16 md:w-28 opacity-15 md:opacity-20 parallax-layer"
+      data-speed="0.15"
+      aria-hidden="true"
+      loading="lazy"
+    >
+    <img
+      src="assets/metamorphosis-beetle.png"
+      alt=""
+      width="96"
+      height="96"
+      class="sketch-img motif-float absolute bottom-32 left-4 md:left-16 w-14 md:w-24 opacity-10 md:opacity-15 parallax-layer hidden sm:block"
+      data-speed="0.1"
+      aria-hidden="true"
+      loading="lazy"
+    >
+  </header>
+
+  <!-- Spiral Divider -->
+  <div class="spiral-divider" aria-hidden="true">
+    <svg width="80" height="20" viewBox="0 0 80 20"><line x1="0" y1="10" x2="30" y2="10"/></svg>
+    <img src="assets/uzumaki-spiral.png" alt="" width="56" height="56" class="sketch-img spiral-divider-img" loading="lazy">
+    <svg width="80" height="20" viewBox="0 0 80 20"><line x1="50" y1="10" x2="80" y2="10"/></svg>
+  </div>
+
+  <!-- ═══════════════════ ABOUT ═══════════════════ -->
+  <section id="about" class="py-20 md:py-28 px-6 reveal-section section-unfurl">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2 sketch-filter">Journal Entry</h2>
+      <p class="text-warm-brown italic mb-8">§ On building backends like soya aloo stir-fry</p>
+
+      <div class="journal-frame">
+        <p class="text-lg leading-relaxed mb-6">
+          Backend Software Engineer with <strong>4+ years</strong> building high-throughput distributed systems using Node.js and AWS. Like a perfect <em>soya aloo stir-fry</em> — balanced, spicy under pressure, and nourishing millions — I architect backends that handle millions of events daily without breaking a sweat (or the budget).
+        </p>
+        <p class="text-base leading-relaxed mb-6 text-ink/80">
+          Experienced in event-driven architectures, caching systems, asynchronous processing, and large-scale messaging platforms. Strong focus on system reliability, performance optimization, and scalable backend infrastructure — from Lambda pipelines processing <strong>1M SMS/hour</strong> to Redis Lua scripts cutting auth reads by 90%.
+        </p>
+        <blockquote class="border-l-4 border-oil-red pl-4 my-6 will-to-power text-ink/90 italic">
+          "I have declared war on flaky deploys. What does not kill my pipeline makes it stronger."
+          <footer class="text-sm text-warm-brown mt-2 not-italic">— Nietzsche, if he were a DevOps engineer</footer>
+        </blockquote>
+        <p class="text-base leading-relaxed text-ink/80">
+          Between commits, I cook soulful meals and publish open-source tools like <strong>Limitly</strong>. Code and kitchen: both demand patience, heat management, blue-green rollouts, and the courage to taste before you serve.
+        </p>
+
+        <div class="metamorphosis-panel mt-8 pt-6 border-t border-dashed border-ink/20">
+          <div class="sketch-frame">
+            <div class="oil-wash"></div>
+            <img
+              src="assets/metamorphosis-beetle.png"
+              alt="Hand-sketched Kafka Metamorphosis — beetle morphing into a Lambda function"
+              width="200"
+              height="200"
+              class="metamorphosis-img sketch-img"
+              loading="lazy"
+            >
+            <p class="motif-caption">Die Verwandlung · Ch. 1</p>
+          </div>
+          <div>
+            <p class="text-sm text-ink/80 leading-relaxed italic">
+              "I awoke one morning from uneasy dreams and found myself transformed in my bed into a Senior Backend Engineer."
+            </p>
+            <p class="text-sm text-ink/70 mt-3 leading-relaxed">
+              Not Gregor Samsa's beetle — a production-hardened Lambda with opinions about SQS backpressure, Redis Lua scripts, and why your queue should spiral like <em>Uzumaki</em> but never actually break.
+            </p>
+          </div>
+        </div>
+
+        <div class="literary-motifs">
+          <div class="motif-card">
+            <div class="sketch-frame">
+              <div class="oil-wash"></div>
+              <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral icon — infinite queue motif" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
+            </div>
+            <p class="motif-caption">Uzumaki · Redis queues</p>
+          </div>
+          <div class="motif-card">
+            <div class="sketch-frame">
+              <div class="oil-wash"></div>
+              <img src="assets/uzumaki-cluster.png" alt="Uzumaki spiral cluster — distributed systems motif" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
+            </div>
+            <p class="motif-caption">Eternal loops · Bull jobs</p>
+          </div>
+          <div class="motif-card sm:col-span-2 md:col-span-1">
+            <div class="sketch-frame">
+              <div class="oil-wash"></div>
+              <img src="assets/metamorphosis-beetle.png" alt="Metamorphosis beetle to Lambda transformation icon" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
+            </div>
+            <p class="motif-caption">Metamorphosis · Junior → Architect</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PANTRY / SKILLS ═══════════════════ -->
+  <section id="pantry" class="py-20 md:py-28 px-6 reveal-section">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2 text-center">The Pantry</h2>
+      <p class="text-warm-brown italic text-center mb-12">Every great feast starts with well-stocked staples</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">🌶️</div>
+          <h3 class="font-bold text-lg mb-1">Base Spices</h3>
+          <p class="text-sm text-warm-brown mb-3">Languages</p>
+          <p class="text-sm text-ink/80">JavaScript, TypeScript — the sturdy rice base of every distributed dish.</p>
+        </div>
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">🍳</div>
+          <h3 class="font-bold text-lg mb-1">The Wok</h3>
+          <p class="text-sm text-warm-brown mb-3">Backend Technologies</p>
+          <p class="text-sm text-ink/80">Node.js, Express.js, Fastify, REST APIs, WebSockets, Microservices, Authentication & Authorization, API Design.</p>
+        </div>
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">🍽️</div>
+          <h3 class="font-bold text-lg mb-1">Plating Station</h3>
+          <p class="text-sm text-warm-brown mb-3">Frontend Technologies</p>
+          <p class="text-sm text-ink/80">React.js, HTML5, CSS3, Tailwind CSS, Material UI, Redux Toolkit, Context API, React Query, Responsive UI.</p>
+        </div>
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">🥒</div>
+          <h3 class="font-bold text-lg mb-1">Quick Pickle Burst</h3>
+          <p class="text-sm text-warm-brown mb-3">Databases & Caching</p>
+          <p class="text-sm text-ink/80">MongoDB, Redis, Elasticsearch, Redis Lua Scripts, Cache-Aside Pattern, Distributed Caching.</p>
+        </div>
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">🔥</div>
+          <h3 class="font-bold text-lg mb-1">The Fire</h3>
+          <p class="text-sm text-warm-brown mb-3">Cloud & DevOps</p>
+          <p class="text-sm text-ink/80">AWS (Lambda, ECS, Fargate, EC2, SQS, S3, CloudWatch, ELB), Docker, Kubernetes, Git, GitHub Actions, GitLab CI/CD, Linux.</p>
+        </div>
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">📨</div>
+          <h3 class="font-bold text-lg mb-1">The Conveyor Belt</h3>
+          <p class="text-sm text-warm-brown mb-3">Messaging & Distributed Systems</p>
+          <p class="text-sm text-ink/80">Bull Queue, Redis Pub/Sub, MongoDB Change Streams, Event-Driven Architecture, Queue-Based Systems, Provider Routing.</p>
+        </div>
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">🛡️</div>
+          <h3 class="font-bold text-lg mb-1">The Thermometer</h3>
+          <p class="text-sm text-warm-brown mb-3">Monitoring & Reliability</p>
+          <p class="text-sm text-ink/80">AWS CloudWatch, Logging, Fault-Tolerant Systems, Retry Mechanisms, Blue-Green Deployment, Performance Optimization.</p>
+        </div>
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">🧪</div>
+          <h3 class="font-bold text-lg mb-1">Fusion Blends</h3>
+          <p class="text-sm text-warm-brown mb-3">AI & Integrations</p>
+          <p class="text-sm text-ink/80">Google Gemini API, RAG, Vector Search, Embedding Models, Recraft Vectorize, Recraft V3 SVG, Zoho Extension SDK, Stripe SDK.</p>
+        </div>
+
+        <div class="pantry-card">
+          <div class="steam"><span class="steam-line"></span><span class="steam-line"></span><span class="steam-line"></span></div>
+          <div class="text-2xl mb-3">🔧</div>
+          <h3 class="font-bold text-lg mb-1">Side Tools</h3>
+          <p class="text-sm text-warm-brown mb-3">Other</p>
+          <p class="text-sm text-ink/80">Socket.IO, Postman — the tasting spoons and thermometers of API craftsmanship.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="spiral-divider px-6" aria-hidden="true">
+    <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="22" y2="10"/></svg>
+    <img src="assets/uzumaki-cluster.png" alt="" width="48" height="48" class="sketch-img spiral-divider-img opacity-60" loading="lazy">
+    <svg width="60" height="20" viewBox="0 0 60 20"><line x1="38" y1="10" x2="60" y2="10"/></svg>
+  </div>
+
+  <!-- ═══════════════════ EXPERIENCE ═══════════════════ -->
+  <section id="experience" class="py-20 md:py-28 px-6 reveal-section">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2">The Kitchen Logs</h2>
+          <p class="text-warm-brown italic">Dashed pencil lines connecting every role</p>
+        </div>
+        <div class="sketch-frame w-20 h-20 md:w-24 md:h-24 flex-shrink-0 self-end">
+          <div class="oil-wash"></div>
+          <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral — timeline motif" width="96" height="96" class="uzumaki-icon-img sketch-img spin-slow" loading="lazy">
+        </div>
+      </div>
+
+      <div class="timeline relative">
+        <svg class="absolute left-0 top-0 w-full h-full pointer-events-none" style="left: -1px;" aria-hidden="true">
+          <line class="timeline-svg-line" x1="1" y1="0" x2="1" y2="2400" stroke="#2C1F14" stroke-width="2" stroke-dasharray="8 8" opacity="0.3"/>
+        </svg>
+
+        <div class="timeline-entry">
+          <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+            <div class="flex flex-wrap items-baseline gap-2">
+              <h3 class="font-bold text-lg">Guni SMS</h3>
+              <span class="text-sm text-warm-brown">Senior Backend Engineer</span>
+            </div>
+            <span class="text-xs text-ink/50">Feb 2022 – Present</span>
+          </div>
+          <p class="text-sm text-teal-glow mb-2">Messaging Platform · 1M SMS/MMS per hour (278 msg/sec sustained)</p>
+          <p class="text-sm text-ink/80">Engineered and scaled backend infrastructure for a high-throughput messaging platform — asynchronous processing, provider routing, and real-time communication workflows.</p>
+          <p class="text-xs text-warm-brown mt-2 italic">Click to unfold the full kitchen log →</p>
+          <div class="details">
+            <ul class="text-sm text-ink/70 mt-3 space-y-2 list-disc list-outside ml-4">
+              <li>Architected a multi-stage AWS Lambda bulk messaging pipeline (L1→L2→L3) using SQS, S3, Redis, and MongoDB to process 1M SMS/MMS messages per hour, with provider batching reducing outbound HTTP requests by 99% and Redis DLR caching enabling high-speed inbound reply correlation.</li>
+              <li>Engineered scalable multi-provider SMS reply processing pipelines using AWS Lambda, SQS, Redis, and MongoDB, processing 100k+ MO messages/day with provider-agnostic webhook orchestration.</li>
+              <li>Owned production deployment reliability by leading blue-green deployment strategies using AWS ELB, enabling seamless feature rollouts with minimal disruption and faster rollback recovery.</li>
+              <li>Designed AWS Lambda + SQS pipelines to handle high-throughput workloads, increasing processing capacity 10× while maintaining system stability.</li>
+              <li>Designed and optimized a distributed multi-provider messaging routing layer with automated fallback strategies, reducing SMS costs by 33% and MMS costs by 50%.</li>
+              <li>Designed and implemented Redis-backed authentication and user-profile caching using Lua scripts, Pub/Sub invalidation, and cache-aside patterns, reducing auth-related MongoDB reads by 90%.</li>
+              <li>Built distributed cache invalidation and high-throughput Redis pipelines using ioredis, Redis Pub/Sub, and MongoDB change streams, improving multi-instance consistency and reducing API latency on cache hits by 60–85%.</li>
+              <li>Engineered distributed background job processing using Bull and Redis queues, offloading asynchronous workloads and reducing average request latency by 60%.</li>
+              <li>Designed and maintained scalable REST and WebSocket services using Node.js (Express/Fastify), supporting real-time messaging workflows.</li>
+              <li>Implemented real-time data updates using Socket.IO and MongoDB Change Streams, reducing redundant API calls by 40%.</li>
+              <li>Designed and developed a Zoho CRM extension using React.js, JavaScript, Zoho Extension SDK, and REST APIs for SMS/MMS within Zoho CRM.</li>
+              <li>Led backend security hardening initiatives, supporting ISO 27001 certification readiness and reducing operational security risks.</li>
+              <li>Mentored junior developers, reviewed critical backend changes, and promoted scalable engineering practices.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+            <div class="flex flex-wrap items-baseline gap-2">
+              <h3 class="font-bold text-lg">FluidFit.ai</h3>
+              <span class="text-sm text-warm-brown">Senior Software Engineer (Contract)</span>
+            </div>
+            <span class="text-xs text-ink/50">Dec 2025 – Feb 2026</span>
+          </div>
+          <p class="text-sm text-teal-glow mb-2">Remote, USA · Multimodal AI media pipelines</p>
+          <p class="text-sm text-ink/80">Architected and optimized multimodal AI media pipelines integrating Google Gemini APIs for image and video generation — improving reliability, consistency, and operational scalability.</p>
+          <p class="text-xs text-warm-brown mt-2 italic">Click to unfold the full kitchen log →</p>
+          <div class="details">
+            <ul class="text-sm text-ink/70 mt-3 space-y-2 list-disc list-outside ml-4">
+              <li>Engineered high-performance image processing services using Sharp and Jimp, implementing advanced enhancement controls including brightness, contrast, sharpness, shadows, highlights, opacity, and midtone correction.</li>
+              <li>Integrated and orchestrated multiple generative AI models including Imagen 4, Veo 3.1, GPT Image 1.5, Qwen Image, and ImagineArt with provider fallback strategies.</li>
+              <li>Owned the complete development lifecycle of vector generation and image vectorization features, building React.js frontends and integrating Recraft Vectorize, Recraft V3 SVG, and Google Gemini APIs for automated SVG asset creation and transformation.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="spiral-divider px-6" aria-hidden="true">
+    <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="22" y2="10"/></svg>
+    <img src="assets/metamorphosis-beetle.png" alt="" width="52" height="52" class="sketch-img opacity-50 rounded-sm" loading="lazy">
+    <svg width="60" height="20" viewBox="0 0 60 20"><line x1="38" y1="10" x2="60" y2="10"/></svg>
+  </div>
+
+  <!-- ═══════════════════ PROJECTS ═══════════════════ -->
+  <section id="projects" class="py-20 md:py-28 px-6 reveal-section">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2 text-center">Signature Dishes</h2>
+      <p class="text-warm-brown italic text-center mb-12">Recipes that scale from home kitchen to feast for millions</p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        <!-- Limitly — Hero Project -->
+        <div class="project-card featured lg:col-span-2 p-6 md:p-8">
+          <div class="flex flex-col md:flex-row gap-6 md:gap-10 items-start">
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="sketch-frame w-12 h-12 p-1 flex-shrink-0">
+                  <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral — Limitly rate limiter icon" width="40" height="40" class="uzumaki-icon-img sketch-img spiral-loader" loading="lazy">
+                </div>
+                <h3 class="font-bold text-2xl">Limitly</h3>
+                <span class="text-xs bg-teal-glow/10 text-teal-glow px-2 py-1 rounded">npm · Open Source</span>
+                <span class="text-xs text-ink/50">June 2026 – Present</span>
+              </div>
+              <p class="text-ink/80 mb-4">
+                Token Bucket that holds more than your grandma's masala dabba. Production-ready distributed rate limiting — 6 frameworks, 4 storage backends, 20,000+ req/sec on a single Redis node with P95 &lt; 5ms.
+              </p>
+              <ul class="text-sm text-ink/70 mb-4 space-y-1 list-disc list-inside">
+                <li>Express, Fastify, Hono, Koa, Bun, NestJS · Redis, Valkey, DragonflyDB, Memcached</li>
+                <li>Sliding Window & Token Bucket with Redis Lua scripts and CAS-based Memcached updates</li>
+                <li>IP/API-key/user-based keys, fail-open policies, standards-compliant rate-limit headers</li>
+              </ul>
+              <div class="code-block mb-4">
+                <code>npm install limitly</code>
+              </div>
+              <div class="flex gap-4 flex-wrap">
+                <a href="https://github.com/adasarpan404/limitly" target="_blank" rel="noopener noreferrer" class="text-sm text-teal-glow hover:underline">View Source →</a>
+                <a href="https://www.npmjs.com/package/limitly" target="_blank" rel="noopener noreferrer" class="text-sm text-teal-glow hover:underline">npm Registry →</a>
+              </div>
+            </div>
+            <div class="text-center md:text-right">
+              <p class="text-sm text-warm-brown mb-2">Throughput benchmark</p>
+              <div class="rate-counter relative inline-block">
+                <span class="spiral-ring"></span>
+                <span id="rate-counter">0/sec</span>
+              </div>
+              <p class="text-xs text-ink/50 mt-2">P95 latency &lt; 5ms · Redis Cluster ready</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card p-6 lg:col-span-2">
+          <div class="flex flex-wrap items-center gap-3 mb-3">
+            <h3 class="font-bold text-xl">OpenFeature.dev</h3>
+            <span class="text-xs bg-warm-brown/20 text-warm-brown px-2 py-1 rounded">Open Source</span>
+          </div>
+          <p class="text-sm text-ink/80 mb-4">
+            Contributed PHP getting-started documentation using Docusaurus to improve developer onboarding and adoption of standardized feature flagging practices. Because deploys should be reversible, not regrettable.
+          </p>
+          <a href="https://openfeature.dev" target="_blank" rel="noopener noreferrer" class="text-sm text-teal-glow hover:underline">OpenFeature.dev →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ EDUCATION ═══════════════════ -->
+  <section id="education" class="py-20 md:py-28 px-6 reveal-section">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-ink mb-8">Education</h2>
+
+      <div class="diploma-frame">
+        <p class="text-sm uppercase tracking-widest text-warm-brown mb-2">Dr. A.P.J. Abdul Kalam Technical University</p>
+        <h3 class="text-xl font-bold mb-1">Bachelor of Technology</h3>
+        <p class="text-base text-ink/80 mb-3">Computer Science & Engineering</p>
+        <p class="text-sm text-warm-brown mb-4">Lucknow, India · Aug 2018 – June 2022</p>
+        <p class="text-ink/80 text-sm leading-relaxed">
+          Foundations in computer science — later tempered in the fires of production messaging platforms, Lambda pipelines, and the relentless will to build systems that endure.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER / CONTACT ═══════════════════ -->
+  <footer id="contact" class="py-20 md:py-28 px-6 border-t border-ink/10 reveal-section">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl md:text-4xl font-bold text-ink mb-4">Let's Connect</h2>
+      <p class="text-warm-brown italic mb-8 max-w-lg mx-auto">
+        Over code and chai. Or discuss how Uzumaki spirals mirror infinite scalability.
+      </p>
+
+      <div class="flex justify-center gap-6 mb-10">
+        <a href="https://github.com/adasarpan404" target="_blank" rel="noopener noreferrer" class="doodle-icon" aria-label="GitHub">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/arpandas-adasarpan" target="_blank" rel="noopener noreferrer" class="doodle-icon" aria-label="LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 114.127 0 2.062 2.062 0 01-2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="mailto:dasarpan471@gmail.com" class="doodle-icon" aria-label="Email">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+      </div>
+
+      <div class="text-sm text-ink/60 space-y-1">
+        <p><a href="tel:+917534927815" class="hover:text-teal-glow transition">+91 75349 27915</a></p>
+        <p><a href="mailto:dasarpan471@gmail.com" class="hover:text-teal-glow transition">dasarpan471@gmail.com</a></p>
+      </div>
+
+      <div class="mt-16 pt-8 border-t border-ink/10">
+        <div class="flex justify-center items-center gap-6 mb-6">
+          <img src="assets/uzumaki-cluster.png" alt="Uzumaki spiral cluster icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-slow" loading="lazy">
+          <img src="assets/metamorphosis-beetle.png" alt="Kafka Metamorphosis beetle icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-50" loading="lazy">
+          <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-reverse" loading="lazy">
+        </div>
+        <p class="text-xs text-ink/40">
+          Crafted between commits & stir-fries · © 2026 Arpan Das
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

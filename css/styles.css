@@ -1,0 +1,803 @@
+/* ─── Manuscript Portfolio — Custom Styles ─── */
+
+:root {
+  --paper: #F5F0E8;
+  --ink: #2C1F14;
+  --oil-umber: #8B4513;
+  --warm-brown: #C19A6B;
+  --oil-red: #C44D2A;
+  --ember: #E85D3A;
+  --teal-glow: #2A9D8F;
+  --charcoal: #1A1410;
+  --pencil: rgba(44, 31, 20, 0.15);
+}
+
+.dark-mode {
+  --paper: #1E1814;
+  --ink: #E8DFD0;
+  --oil-umber: #A0622E;
+  --warm-brown: #8B7355;
+  --pencil: rgba(232, 223, 208, 0.08);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  background-color: var(--paper);
+  color: var(--ink);
+  cursor: none;
+  overflow-x: hidden;
+  transition: background-color 0.6s ease, color 0.6s ease;
+}
+
+body.no-custom-cursor {
+  cursor: auto;
+}
+
+/* Paper canvas texture */
+.paper-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-color: var(--paper);
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      var(--pencil) 28px,
+      var(--pencil) 29px
+    ),
+    radial-gradient(ellipse at 20% 30%, rgba(139, 69, 19, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(42, 157, 143, 0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 90%, rgba(196, 77, 42, 0.05) 0%, transparent 35%);
+}
+
+.paper-canvas::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 39px,
+    var(--pencil) 39px,
+    var(--pencil) 40px
+  );
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Pencil cursor trail */
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--ink);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: multiply;
+}
+
+.dark-mode .cursor-dot {
+  mix-blend-mode: screen;
+  background: var(--warm-brown);
+}
+
+.cursor-pencil {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-2px, -18px);
+}
+
+.trail-mark {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--ink);
+  opacity: 0;
+  animation: trail-fade 1.2s ease-out forwards;
+}
+
+@keyframes trail-fade {
+  0% { opacity: 0.25; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.3); }
+}
+
+/* Sketch filter for SVG elements */
+.sketch-filter {
+  filter: url(#sketch-wobble);
+}
+
+/* Hand-drawn buttons */
+.sketch-button {
+  position: relative;
+  border-radius: 2px 8px 3px 6px !important;
+  box-shadow: 2px 3px 0 var(--ink);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sketch-button:hover {
+  transform: translate(-1px, -2px);
+  box-shadow: 4px 5px 0 var(--ink);
+}
+
+.sketch-button-filled {
+  border-radius: 4px 2px 6px 3px !important;
+  box-shadow: 3px 3px 0 rgba(44, 31, 20, 0.4);
+}
+
+.sketch-button-filled:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 5px 5px 0 rgba(44, 31, 20, 0.3);
+}
+
+/* Avatar sketch effect */
+.avatar-sketch {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px dashed var(--ink);
+  transition: transform 0.4s ease, border-color 0.3s ease;
+}
+
+.avatar-sketch img {
+  filter: grayscale(0.6) contrast(1.1) url(#pencil-sketch);
+  transition: filter 0.5s ease;
+}
+
+.avatar-sketch:hover {
+  transform: rotate(3deg);
+}
+
+.avatar-sketch:hover img {
+  filter: grayscale(0.2) contrast(1.05) saturate(1.2);
+}
+
+.avatar-sketch .oil-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 30%, rgba(196, 77, 42, 0.25) 60%, rgba(42, 157, 143, 0.15) 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.avatar-sketch:hover .oil-fill {
+  opacity: 1;
+}
+
+/* Drawing text animation */
+.drawing-text {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.drawing-text .char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Section unfurl */
+.section-unfurl {
+  transform-origin: top center;
+  perspective: 1200px;
+}
+
+/* Journal entry frame */
+.journal-frame {
+  position: relative;
+  padding: 2.5rem;
+  border: 2px solid var(--ink);
+  border-radius: 3px 12px 4px 8px;
+  background: rgba(245, 240, 232, 0.6);
+  box-shadow:
+    inset 0 0 30px rgba(139, 69, 19, 0.05),
+    4px 6px 0 rgba(44, 31, 20, 0.08);
+}
+
+.dark-mode .journal-frame {
+  background: rgba(30, 24, 20, 0.7);
+}
+
+.journal-frame::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 24px;
+  width: 60px;
+  height: 16px;
+  background: var(--warm-brown);
+  opacity: 0.4;
+  border-radius: 2px;
+  transform: rotate(-2deg);
+}
+
+/* Recipe / pantry cards */
+.pantry-card {
+  position: relative;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 4px 10px 3px 8px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.pantry-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, transparent 50%, var(--warm-brown) 50%);
+  opacity: 0.3;
+}
+
+.pantry-card:hover {
+  transform: translateY(-6px) rotate(-0.5deg);
+  box-shadow: 6px 8px 0 rgba(44, 31, 20, 0.12);
+}
+
+.pantry-card .steam {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pantry-card:hover .steam {
+  opacity: 1;
+}
+
+.steam-line {
+  display: inline-block;
+  width: 2px;
+  height: 20px;
+  background: var(--warm-brown);
+  margin: 0 3px;
+  border-radius: 2px;
+  animation: steam-rise 1.5s ease-in-out infinite;
+}
+
+.steam-line:nth-child(2) { animation-delay: 0.3s; height: 16px; }
+.steam-line:nth-child(3) { animation-delay: 0.6s; height: 22px; }
+
+@keyframes steam-rise {
+  0%, 100% { transform: translateY(0) scaleY(1); opacity: 0.3; }
+  50% { transform: translateY(-8px) scaleY(1.2); opacity: 0.6; }
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--ink) 0px,
+    var(--ink) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  opacity: 0.4;
+}
+
+.timeline-draw {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+.timeline-entry {
+  position: relative;
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  border: 1px dashed var(--ink);
+  border-radius: 2px 8px 4px 6px;
+  background: rgba(245, 240, 232, 0.5);
+  opacity: 0.85;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
+}
+
+.dark-mode .timeline-entry {
+  background: rgba(30, 24, 20, 0.5);
+}
+
+.timeline-entry::before {
+  content: '';
+  position: absolute;
+  left: -2.65rem;
+  top: 1.5rem;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.timeline-entry:hover,
+.timeline-entry.expanded {
+  opacity: 1;
+  transform: translateX(4px);
+  box-shadow: 3px 4px 0 rgba(44, 31, 20, 0.08);
+}
+
+.timeline-entry .details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, margin-top 0.3s ease;
+}
+
+.timeline-entry.expanded .details {
+  max-height: 1200px;
+  margin-top: 1rem;
+}
+
+/* Project cards */
+.project-card {
+  position: relative;
+  border: 2px solid var(--ink);
+  border-radius: 6px 3px 8px 4px;
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 8px 10px 0 rgba(44, 31, 20, 0.1);
+}
+
+.project-card.featured {
+  border-width: 3px;
+  border-color: var(--oil-umber);
+}
+
+.code-block {
+  background: var(--charcoal);
+  color: #A8E6CF;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  padding: 1rem;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.code-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(42, 157, 143, 0.15) 0%, transparent 60%);
+  pointer-events: none;
+  animation: terminal-glow 3s ease-in-out infinite;
+}
+
+@keyframes terminal-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Sketch motif images */
+.sketch-img {
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: filter 0.5s ease, transform 0.5s ease, opacity 0.4s ease;
+}
+
+.dark-mode .sketch-img {
+  mix-blend-mode: screen;
+  filter: brightness(0.85) contrast(1.1);
+}
+
+.motif-float {
+  pointer-events: none;
+  user-select: none;
+}
+
+.motif-float.spin-slow {
+  animation: slow-spin 90s linear infinite;
+}
+
+.motif-float.spin-reverse {
+  animation: slow-spin 120s linear infinite reverse;
+}
+
+.uzumaki-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: saturate(0.85) contrast(1.05);
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+
+.uzumaki-icon-img:hover,
+.sketch-frame:hover .uzumaki-icon-img {
+  filter: saturate(1.1) contrast(1.1) drop-shadow(0 0 12px rgba(42, 157, 143, 0.35));
+}
+
+.sketch-frame {
+  position: relative;
+  border: 2px dashed var(--ink);
+  border-radius: 4px 12px 3px 8px;
+  padding: 0.75rem;
+  background: rgba(245, 240, 232, 0.5);
+  overflow: hidden;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.dark-mode .sketch-frame {
+  background: rgba(30, 24, 20, 0.6);
+}
+
+.sketch-frame:hover {
+  transform: translateY(-4px) rotate(-0.5deg);
+  box-shadow: 5px 6px 0 rgba(44, 31, 20, 0.1);
+}
+
+.sketch-frame .oil-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 40%, rgba(196, 77, 42, 0.12) 70%, rgba(42, 157, 143, 0.1) 100%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.sketch-frame:hover .oil-wash {
+  opacity: 1;
+}
+
+.metamorphosis-panel {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+@media (min-width: 768px) {
+  .metamorphosis-panel {
+    grid-template-columns: 200px 1fr;
+  }
+}
+
+.metamorphosis-img {
+  width: 100%;
+  max-width: 220px;
+  margin: 0 auto;
+  border-radius: 4px 10px 3px 8px;
+  filter: grayscale(0.3) contrast(1.05);
+  transition: filter 0.6s ease, transform 0.6s ease;
+}
+
+.metamorphosis-panel:hover .metamorphosis-img {
+  filter: grayscale(0) contrast(1.05) saturate(1.15);
+  transform: scale(1.02);
+}
+
+.motif-caption {
+  font-size: 0.75rem;
+  color: var(--warm-brown);
+  font-style: italic;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.spiral-divider-img {
+  width: 56px;
+  height: 56px;
+  opacity: 0.75;
+  animation: slow-spin 45s linear infinite;
+}
+
+.literary-motifs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 640px) {
+  .literary-motifs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.motif-card {
+  text-align: center;
+}
+
+.motif-card .sketch-frame {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+/* Spiral motifs */
+.spiral-accent {
+  opacity: 0.08;
+  animation: slow-spin 60s linear infinite;
+}
+
+.spiral-glow {
+  filter: drop-shadow(0 0 8px rgba(42, 157, 143, 0.3));
+}
+
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spiral-loader {
+  animation: slow-spin 3s linear infinite;
+}
+
+/* Nietzsche quote pulse */
+.will-to-power {
+  animation: power-pulse 4s ease-in-out infinite;
+}
+
+@keyframes power-pulse {
+  0%, 100% { text-shadow: none; }
+  50% { text-shadow: 0 0 20px rgba(196, 77, 42, 0.3); }
+}
+
+/* Kafka beetle morph */
+.beetle-motif {
+  display: inline-block;
+  vertical-align: middle;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: 0.35rem;
+  transition: transform 0.6s ease;
+}
+
+.beetle-motif img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(0.4);
+  transition: filter 0.5s ease, transform 0.5s ease;
+}
+
+.beetle-motif:hover {
+  transform: scale(1.15) rotate(8deg);
+}
+
+.beetle-motif:hover img {
+  filter: grayscale(0) saturate(1.2) drop-shadow(0 0 8px rgba(42, 157, 143, 0.4));
+}
+
+/* Section dividers */
+.spiral-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 4rem 0;
+  opacity: 0.5;
+}
+
+.spiral-divider line {
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+/* Diploma frame */
+.diploma-frame {
+  position: relative;
+  padding: 2rem 3rem;
+  border: 3px double var(--oil-umber);
+  border-radius: 2px;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.diploma-frame::before,
+.diploma-frame::after {
+  content: '✦';
+  position: absolute;
+  color: var(--warm-brown);
+  font-size: 1.2rem;
+}
+
+.diploma-frame::before { top: 8px; left: 12px; }
+.diploma-frame::after { bottom: 8px; right: 12px; }
+
+/* Dark mode toggle */
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  background: var(--paper);
+  cursor: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 2px 3px 0 var(--ink);
+}
+
+.theme-toggle:hover {
+  transform: rotate(15deg) scale(1.05);
+}
+
+/* Nav */
+.site-nav {
+  position: fixed;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.5rem 1rem;
+  background: rgba(245, 240, 232, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--ink);
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.dark-mode .site-nav {
+  background: rgba(30, 24, 20, 0.9);
+}
+
+.site-nav.visible {
+  opacity: 1;
+}
+
+.site-nav a {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--ink);
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+.site-nav a:hover {
+  background: rgba(139, 69, 19, 0.15);
+}
+
+/* Limitly spiral counter */
+.rate-counter {
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  color: var(--teal-glow);
+  position: relative;
+}
+
+.rate-counter .spiral-ring {
+  position: absolute;
+  inset: -20px;
+  border: 2px solid var(--teal-glow);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: slow-spin 8s linear infinite;
+}
+
+/* Footer doodle icons */
+.doodle-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--ink);
+  border-radius: 40% 60% 55% 45% / 55% 40% 60% 45%;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.doodle-icon:hover {
+  transform: rotate(-5deg) scale(1.1);
+  background: rgba(42, 157, 143, 0.1);
+}
+
+/* Parallax layers */
+.parallax-layer {
+  will-change: transform;
+}
+
+/* Loading screen */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: var(--paper);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  body {
+    cursor: auto;
+  }
+
+  .cursor-dot,
+  .cursor-pencil,
+  .cursor-trail {
+    display: none !important;
+  }
+
+  .theme-toggle {
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+
+  .site-nav {
+    display: none;
+  }
+
+  .journal-frame {
+    padding: 1.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
