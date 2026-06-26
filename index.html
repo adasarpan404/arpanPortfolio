@@ -117,7 +117,7 @@
     <p class="text-ink text-sm tracking-widest uppercase opacity-60">Unfurling manuscript…</p>
   </div>
 
-  <!-- Navigation -->
+  <!-- Desktop Navigation -->
   <nav class="site-nav" aria-label="Main navigation">
     <a href="#about">Journal</a>
     <a href="#pantry">Pantry</a>
@@ -128,10 +128,21 @@
     <a href="#contact">Connect</a>
   </nav>
 
+  <!-- Mobile Navigation -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="#about" class="mobile-nav-link">Journal</a>
+    <a href="#pantry" class="mobile-nav-link">Pantry</a>
+    <a href="#experience" class="mobile-nav-link">Kitchen</a>
+    <a href="#projects" class="mobile-nav-link">Recipes</a>
+    <a href="#articles" class="mobile-nav-link">Marginalia</a>
+    <a href="#education" class="mobile-nav-link">Degree</a>
+    <a href="#contact" class="mobile-nav-link">Connect</a>
+  </nav>
+
   <!-- ═══════════════════ HERO ═══════════════════ -->
-  <header id="hero" class="min-h-screen flex items-center justify-center relative overflow-hidden px-6">
+  <header id="hero" class="min-h-screen min-h-[100dvh] flex items-center justify-center relative overflow-x-hidden px-4 sm:px-6">
     <div class="max-w-6xl mx-auto w-full relative z-10 parallax-content" data-speed="-0.14">
-      <div class="flex flex-col xl:flex-row items-center gap-8 xl:gap-20">
+      <div class="hero-layout flex flex-col lg:flex-row items-center gap-8 lg:gap-12 xl:gap-20">
 
         <!-- ── Left: hero text ── -->
         <div class="flex-1 text-center">
@@ -149,20 +160,20 @@
 
           <p class="text-sm uppercase tracking-[0.3em] text-warm-brown mb-4 jitter-text">The Architect of Spirals</p>
 
-          <h1 class="text-5xl md:text-7xl font-bold tracking-tighter text-ink hero-title opacity-0">Arpan Das</h1>
+          <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-ink hero-title opacity-0">Arpan Das</h1>
 
-          <p class="text-lg md:text-2xl mt-6 text-warm-brown italic max-w-2xl mx-auto hero-tagline opacity-0">
+          <p class="text-base sm:text-lg md:text-2xl mt-4 sm:mt-6 text-warm-brown italic max-w-2xl mx-auto hero-tagline opacity-0">
             "From Kafka's beetle to Nietzsche's hammer — I architect spirals that never break."
           </p>
 
-          <p class="mt-4 text-base text-ink/70 max-w-xl mx-auto hero-tagline opacity-0 flex items-center justify-center flex-wrap gap-2">
+          <p class="mt-4 text-sm sm:text-base text-ink/70 max-w-xl mx-auto hero-tagline opacity-0 flex items-center justify-center flex-wrap gap-2 px-2">
             <span class="beetle-motif" title="Kafka's Metamorphosis — beetle to Lambda">
               <img src="assets/metamorphosis-beetle.png" alt="Kafka Metamorphosis sketch — beetle transforming into Lambda" width="40" height="40" loading="lazy">
             </span>
             Backend Software Engineer · 4+ Years · Node.js & AWS · Millions of Events Daily
           </p>
 
-          <div class="mt-12 flex gap-4 md:gap-6 justify-center flex-wrap hero-cta opacity-0">
+          <div class="mt-8 sm:mt-12 flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-stretch sm:items-center flex-wrap hero-cta opacity-0 w-full max-w-md sm:max-w-none mx-auto">
             <a href="#experience" class="px-6 md:px-8 py-3 md:py-4 border-2 border-ink text-ink hover:bg-ink hover:text-paper transition-all text-base md:text-lg font-medium sketch-button">
               View the Metamorphosis
             </a>
@@ -249,7 +260,7 @@
   </div>
 
   <!-- ═══════════════════ ABOUT ═══════════════════ -->
-  <section id="about" class="py-20 md:py-28 px-6 reveal-section section-unfurl">
+  <section id="about" class="py-16 sm:py-20 md:py-28 px-4 sm:px-6 reveal-section section-unfurl">
     <div class="max-w-3xl mx-auto">
       <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2 sketch-filter">Journal Entry</h2>
       <p class="text-warm-brown italic mb-8">§ On building backends like soya aloo stir-fry</p>
@@ -320,7 +331,7 @@
   </section>
 
   <!-- ═══════════════════ PANTRY / SKILLS ═══════════════════ -->
-  <section id="pantry" class="py-20 md:py-28 px-6 reveal-section">
+  <section id="pantry" class="py-16 sm:py-20 md:py-28 px-4 sm:px-6 reveal-section">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2 text-center">The Pantry</h2>
       <p class="text-warm-brown italic text-center mb-12">Every great feast starts with well-stocked staples</p>
@@ -403,14 +414,14 @@
     </div>
   </section>
 
-  <div class="spiral-divider px-6" aria-hidden="true">
+  <div class="spiral-divider px-4 sm:px-6" aria-hidden="true">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="22" y2="10"/></svg>
     <img src="assets/uzumaki-cluster.png" alt="" width="48" height="48" class="sketch-img spiral-divider-img opacity-60 parallax-layer" data-speed="-0.18" data-speed-x="-0.1" loading="lazy">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="38" y1="10" x2="60" y2="10"/></svg>
   </div>
 
   <!-- ═══════════════════ EXPERIENCE ═══════════════════ -->
-  <section id="experience" class="py-20 md:py-28 px-6 reveal-section">
+  <section id="experience" class="py-16 sm:py-20 md:py-28 px-4 sm:px-6 reveal-section">
     <div class="max-w-4xl mx-auto">
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
         <div>
@@ -482,14 +493,14 @@
     </div>
   </section>
 
-  <div class="spiral-divider px-6" aria-hidden="true">
+  <div class="spiral-divider px-4 sm:px-6" aria-hidden="true">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="22" y2="10"/></svg>
     <img src="assets/metamorphosis-beetle.png" alt="" width="52" height="52" class="sketch-img opacity-50 rounded-sm parallax-layer" data-speed="0.2" data-speed-x="0.12" data-spin="none" loading="lazy">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="38" y1="10" x2="60" y2="10"/></svg>
   </div>
 
   <!-- ═══════════════════ PROJECTS ═══════════════════ -->
-  <section id="projects" class="py-20 md:py-28 px-6 reveal-section">
+  <section id="projects" class="py-16 sm:py-20 md:py-28 px-4 sm:px-6 reveal-section">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2 text-center">Signature Dishes</h2>
       <p class="text-warm-brown italic text-center mb-12">Recipes that scale from home kitchen to feast for millions</p>
@@ -500,11 +511,11 @@
         <div class="project-card featured lg:col-span-2 p-6 md:p-8">
           <div class="flex flex-col md:flex-row gap-6 md:gap-10 items-start">
             <div class="flex-1">
-              <div class="flex items-center gap-3 mb-3">
+              <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
                 <div class="sketch-frame w-12 h-12 p-1 flex-shrink-0">
                   <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral — Limitly rate limiter icon" width="40" height="40" class="uzumaki-icon-img sketch-img spiral-loader" loading="lazy">
                 </div>
-                <h3 class="font-bold text-2xl">Limitly</h3>
+                <h3 class="font-bold text-xl sm:text-2xl w-full sm:w-auto">Limitly</h3>
                 <span class="text-xs bg-teal-glow/10 text-teal-glow px-2 py-1 rounded">npm · Open Source</span>
                 <span class="text-xs text-ink/50">June 2026 – Present</span>
               </div>
@@ -568,7 +579,7 @@
   </section>
 
   <!-- ═══════════════════ ARTICLES ═══════════════════ -->
-  <section id="articles" class="py-20 md:py-28 px-6 reveal-section">
+  <section id="articles" class="py-16 sm:py-20 md:py-28 px-4 sm:px-6 reveal-section">
     <div class="max-w-4xl mx-auto">
       <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2 text-center">Marginalia</h2>
       <p class="text-warm-brown italic text-center mb-4">Field notes on backends, systems, and the craft of building</p>
@@ -645,7 +656,7 @@
   </section>
 
   <!-- ═══════════════════ EDUCATION ═══════════════════ -->
-  <section id="education" class="py-20 md:py-28 px-6 reveal-section">
+  <section id="education" class="py-16 sm:py-20 md:py-28 px-4 sm:px-6 reveal-section">
     <div class="max-w-3xl mx-auto text-center">
       <h2 class="text-3xl md:text-4xl font-bold text-ink mb-8">Education</h2>
 
@@ -662,7 +673,7 @@
   </section>
 
   <!-- ═══════════════════ FOOTER / CONTACT ═══════════════════ -->
-  <footer id="contact" class="py-20 md:py-28 px-6 border-t border-ink/10 reveal-section">
+  <footer id="contact" class="py-16 sm:py-20 md:py-28 px-4 sm:px-6 pb-28 md:pb-28 border-t border-ink/10 reveal-section">
     <div class="max-w-3xl mx-auto text-center">
       <h2 class="text-3xl md:text-4xl font-bold text-ink mb-4">Let's Connect</h2>
       <p class="text-warm-brown italic mb-8 max-w-lg mx-auto">

@@ -5,7 +5,9 @@
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const isCompact = window.matchMedia('(max-width: 768px), (max-height: 820px)').matches;
   const mobileMedia = window.matchMedia('(max-width: 768px)');
+  const compactMedia = window.matchMedia('(max-width: 768px), (max-height: 820px)');
 
   function revealHeroContent() {
     document.querySelectorAll('.hero-tagline, .hero-cta, .hero-contact').forEach((el) => {
@@ -123,6 +125,11 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
+    ScrollTrigger.config({
+      ignoreMobileResize: true,
+      limitCallbacks: true,
+    });
+
     const isBelowFold = (el) => el.getBoundingClientRect().top > window.innerHeight * 0.85;
 
     const hideBelowFold = (targets, fromVars) => {
@@ -167,8 +174,8 @@
 
       hideBelowFold([section], {
         opacity: 0,
-        y: isMobile ? 50 : 70,
-        rotateX: isMobile ? 0 : 8,
+        y: isCompact ? 50 : 70,
+        rotateX: isCompact ? 0 : 8,
       });
 
       gsap.to(section, {
@@ -229,23 +236,36 @@
       { start: 'top 88%' }
     );
 
-    // Timeline draw effect
+    // Timeline draw effect (scrub is heavy on mobile — use one-shot reveal instead)
     const timelineLine = document.querySelector('.timeline-svg-line');
     if (timelineLine) {
       const length = timelineLine.getTotalLength();
       timelineLine.style.strokeDasharray = length;
       timelineLine.style.strokeDashoffset = length;
 
-      gsap.to(timelineLine, {
-        scrollTrigger: {
-          trigger: '.timeline',
-          start: 'top 70%',
-          end: 'bottom 30%',
-          scrub: 1,
-        },
-        strokeDashoffset: 0,
-        ease: 'none',
-      });
+      if (isCompact) {
+        gsap.to(timelineLine, {
+          strokeDashoffset: 0,
+          duration: 1.2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: '.timeline',
+            start: 'top 80%',
+            once: true,
+          },
+        });
+      } else {
+        gsap.to(timelineLine, {
+          scrollTrigger: {
+            trigger: '.timeline',
+            start: 'top 70%',
+            end: 'bottom 30%',
+            scrub: 1,
+          },
+          strokeDashoffset: 0,
+          ease: 'none',
+        });
+      }
     }
 
     // Timeline entries
@@ -256,22 +276,25 @@
       { start: 'top 85%' }
     );
 
-    initParallax();
+    if (!isCompact) {
+      initParallax();
+    }
 
     onPageReady(() => ScrollTrigger.refresh());
     window.addEventListener('orientationchange', () => {
       setTimeout(() => ScrollTrigger.refresh(), 300);
     });
     mobileMedia.addEventListener('change', () => ScrollTrigger.refresh());
+    compactMedia.addEventListener('change', () => ScrollTrigger.refresh());
   }
 
-  // ─── Parallax Depth Layers ───
+  // ─── Parallax Depth Layers (desktop only — scrub parallax janks mobile scroll) ───
   function initParallax() {
-    if (prefersReducedMotion || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+    if (isCompact || prefersReducedMotion || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
       return;
     }
 
-    const range = isMobile ? 240 : 380;
+    const range = isCompact ? 240 : 380;
 
     const applySpin = (el) => {
       if (el.dataset.spin === 'none') return;
@@ -292,6 +315,10 @@
     };
 
     gsap.utils.toArray('.parallax-layer, .parallax-content').forEach((el) => {
+      if (isCompact && el.classList.contains('parallax-content') && el.closest('#hero')) {
+        return;
+      }
+
       applySpin(el);
 
       const speed = parseFloat(el.dataset.speed) || 0.3;
@@ -303,7 +330,7 @@
           trigger,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: isMobile ? 0.6 : 1.2,
+          scrub: isCompact ? 0.6 : 1.2,
         },
         y: speed * range,
         x: speedX * range * 0.5,
@@ -320,7 +347,7 @@
           end: 'bottom bottom',
           scrub: true,
         },
-        y: isMobile ? 80 : 160,
+        y: isCompact ? 80 : 160,
         ease: 'none',
       });
     }
@@ -339,7 +366,7 @@
 
   // ─── Custom Pencil Cursor ───
   function initCursor() {
-    if (isMobile) {
+    if (isCompact) {
       document.body.classList.add('no-custom-cursor');
       return;
     }
@@ -393,15 +420,47 @@
   // ─── Sticky Nav Visibility ───
   function initNav() {
     const nav = document.querySelector('.site-nav');
-    if (!nav) return;
+    const mobileNav = document.querySelector('.mobile-nav');
+    const sectionIds = ['about', 'pantry', 'experience', 'projects', 'articles', 'education', 'contact'];
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
 
+    const setActive = (id) => {
+      document.querySelectorAll('.site-nav a, .mobile-nav-link').forEach((link) => {
+        const href = link.getAttribute('href');
+        link.classList.toggle('active', href === `#${id}`);
+      });
+    };
+
+    let navTicking = false;
     window.addEventListener('scroll', () => {
-      if (window.scrollY > window.innerHeight * 0.5) {
-        nav.classList.add('visible');
-      } else {
-        nav.classList.remove('visible');
-      }
+      if (navTicking) return;
+      navTicking = true;
+      requestAnimationFrame(() => {
+        if (nav) {
+          nav.classList.toggle('visible', window.scrollY > window.innerHeight * 0.5);
+        }
+
+        const offset = window.innerHeight * 0.35;
+        let current = sectionIds[0];
+        sections.forEach((section) => {
+          if (section.getBoundingClientRect().top <= offset) {
+            current = section.id;
+          }
+        });
+        setActive(current);
+        navTicking = false;
+      });
     }, { passive: true });
+
+    if (mobileNav) {
+      mobileNav.addEventListener('click', (e) => {
+        const link = e.target.closest('.mobile-nav-link');
+        if (!link) return;
+        setActive(link.getAttribute('href').slice(1));
+      });
+    }
   }
 
   // ─── Limitly Rate Counter Animation ───
@@ -493,7 +552,7 @@
         const target = document.querySelector(anchor.getAttribute('href'));
         if (!target) return;
         e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.scrollIntoView({ behavior: isCompact ? 'auto' : 'smooth', block: 'start' });
       });
     });
   }
