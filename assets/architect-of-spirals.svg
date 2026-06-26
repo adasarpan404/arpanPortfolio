@@ -1,0 +1,186 @@
+<svg viewBox="0 0 280 390" xmlns="http://www.w3.org/2000/svg" fill="none" role="img" aria-label="The Architect of Spirals — a cyber-Kafka figure cooking code in a wok">
+
+  <!-- ── Sketch wobble filter (local, no dependency on DOM filter) ── -->
+  <defs>
+    <filter id="sk">
+      <feTurbulence type="turbulence" baseFrequency="0.03" numOctaves="2" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- Warm paper tint for wok glow -->
+    <radialGradient id="wokGlow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#E85D3A" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#8B4513" stop-opacity="0.04"/>
+    </radialGradient>
+    <!-- Teal code shimmer -->
+    <radialGradient id="codeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2A9D8F" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#2A9D8F" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- ═══════ BACKGROUND UZUMAKI (concentric spiral suggestion) ═══════ -->
+  <g opacity="0.06" stroke="#2C1F14" stroke-width="1.3" stroke-linecap="round">
+    <circle cx="140" cy="195" r="26"/>
+    <circle cx="140" cy="195" r="48"/>
+    <circle cx="140" cy="195" r="72"/>
+    <circle cx="140" cy="195" r="98"/>
+    <!-- spiral connector lines -->
+    <path d="M166,195 C166,178 152,167 140,170 C126,173 117,184 120,197 C123,212 136,218 148,214"/>
+    <path d="M188,195 C188,160 168,142 140,143 C110,143 92,164 92,197 C92,232 112,252 140,250"/>
+  </g>
+
+  <!-- ═══════ BEETLE WINGS (behind figure) ═══════ -->
+  <!-- Left wing -->
+  <path d="M105,190 C88,172 62,162 55,178 C48,198 66,228 95,232 C108,235 117,225 118,213 Z"
+        stroke="#2C1F14" stroke-width="1.8" fill="#C19A6B" fill-opacity="0.15" filter="url(#sk)"/>
+  <path d="M104,190 C90,182 74,176 57,178" stroke="#2C1F14" stroke-width="0.8" opacity="0.3"/>
+  <path d="M100,204 C88,202 74,201 60,202" stroke="#2C1F14" stroke-width="0.7" opacity="0.22"/>
+  <path d="M96,218 C86,218 74,218 64,218" stroke="#2C1F14" stroke-width="0.7" opacity="0.18"/>
+
+  <!-- Right wing -->
+  <path d="M175,190 C192,172 218,162 225,178 C232,198 214,228 185,232 C172,235 163,225 162,213 Z"
+        stroke="#2C1F14" stroke-width="1.8" fill="#C19A6B" fill-opacity="0.15" filter="url(#sk)"/>
+  <path d="M176,190 C190,182 206,176 223,178" stroke="#2C1F14" stroke-width="0.8" opacity="0.3"/>
+  <path d="M180,204 C192,202 206,201 220,202" stroke="#2C1F14" stroke-width="0.7" opacity="0.22"/>
+  <path d="M184,218 C194,218 206,218 216,218" stroke="#2C1F14" stroke-width="0.7" opacity="0.18"/>
+
+  <!-- ═══════ FIGURE BODY / APRON ═══════ -->
+  <!-- Apron body -->
+  <path d="M113,178 C111,192 109,228 112,265 L168,265 C171,228 169,192 167,178 Z"
+        stroke="#2C1F14" stroke-width="2" fill="#F5F0E8" fill-opacity="0.92" filter="url(#sk)"/>
+  <!-- Apron bib -->
+  <path d="M125,178 L122,196 L140,202 L158,196 L155,178"
+        stroke="#8B4513" stroke-width="1.2" fill="#8B4513" fill-opacity="0.07"/>
+  <!-- Code lines on apron -->
+  <line x1="127" y1="210" x2="153" y2="210" stroke="#2C1F14" stroke-width="0.8" opacity="0.18"/>
+  <line x1="125" y1="218" x2="155" y2="218" stroke="#2C1F14" stroke-width="0.8" opacity="0.15"/>
+  <line x1="127" y1="226" x2="151" y2="226" stroke="#2C1F14" stroke-width="0.8" opacity="0.12"/>
+  <line x1="125" y1="234" x2="153" y2="234" stroke="#2C1F14" stroke-width="0.8" opacity="0.12"/>
+  <line x1="127" y1="242" x2="148" y2="242" stroke="#2C1F14" stroke-width="0.8" opacity="0.10"/>
+  <!-- Apron badge -->
+  <text x="129" y="192" font-family="monospace" font-size="5.5" fill="#8B4513" opacity="0.55">npm run</text>
+  <text x="132" y="200" font-family="monospace" font-size="6" fill="#C44D2A" opacity="0.5">cook()</text>
+
+  <!-- ═══════ ARMS ═══════ -->
+  <!-- Left arm → left wok handle -->
+  <path d="M113,192 C100,210 88,238 76,268" stroke="#2C1F14" stroke-width="3" stroke-linecap="round" filter="url(#sk)"/>
+  <ellipse cx="74" cy="272" rx="7" ry="5.5" stroke="#2C1F14" stroke-width="1.5" fill="#F5F0E8"/>
+
+  <!-- Right arm → ladle -->
+  <path d="M167,192 C180,210 194,234 205,258" stroke="#2C1F14" stroke-width="3" stroke-linecap="round" filter="url(#sk)"/>
+  <ellipse cx="206" cy="261" rx="7" ry="5.5" stroke="#2C1F14" stroke-width="1.5" fill="#F5F0E8"/>
+  <!-- Ladle handle -->
+  <line x1="206" y1="256" x2="218" y2="234" stroke="#2C1F14" stroke-width="2" stroke-linecap="round"/>
+  <!-- Ladle bowl -->
+  <path d="M212,228 C208,223 215,220 220,223 C225,226 224,232 218,234 Z"
+        stroke="#2C1F14" stroke-width="1.5" fill="#8B4513" fill-opacity="0.35"/>
+
+  <!-- ═══════ NECK ═══════ -->
+  <rect x="134" y="158" width="12" height="22" rx="3" stroke="#2C1F14" stroke-width="1.5" fill="#F5F0E8"/>
+
+  <!-- ═══════ HEAD ═══════ -->
+  <!-- Head shape -->
+  <path d="M106,126 C105,102 118,86 140,85 C162,85 175,102 174,126 C174,146 163,162 140,163 C117,162 106,146 106,126 Z"
+        stroke="#2C1F14" stroke-width="2" fill="#F5F0E8" fill-opacity="0.96" filter="url(#sk)"/>
+
+  <!-- Hair mass (dark fill on top) -->
+  <path d="M107,120 C106,98 118,83 140,82 C162,82 174,98 173,120 L173,112 C172,90 162,77 140,76 C118,76 108,90 107,112 Z"
+        stroke="#2C1F14" stroke-width="1.5" fill="#2C1F14" fill-opacity="0.88"/>
+
+  <!-- Ears -->
+  <path d="M106,124 C100,120 97,128 100,135 C103,142 108,138 108,133" stroke="#2C1F14" stroke-width="1.5" fill="#F5F0E8"/>
+  <path d="M174,124 C180,120 183,128 180,135 C177,142 172,138 172,133" stroke="#2C1F14" stroke-width="1.5" fill="#F5F0E8"/>
+
+  <!-- Glasses — left lens -->
+  <rect x="111" y="120" width="22" height="14" rx="4.5" stroke="#2C1F14" stroke-width="1.8" fill="rgba(42,157,143,0.06)"/>
+  <!-- Glasses — right lens -->
+  <rect x="139" y="120" width="22" height="14" rx="4.5" stroke="#2C1F14" stroke-width="1.8" fill="rgba(42,157,143,0.06)"/>
+  <!-- Bridge -->
+  <line x1="133" y1="126" x2="139" y2="126" stroke="#2C1F14" stroke-width="1.8"/>
+  <!-- Temples -->
+  <line x1="111" y1="126" x2="106" y2="124" stroke="#2C1F14" stroke-width="1.5"/>
+  <line x1="161" y1="126" x2="168" y2="124" stroke="#2C1F14" stroke-width="1.5"/>
+
+  <!-- Eyes (behind glasses) -->
+  <circle cx="122" cy="127" r="3.5" fill="#2C1F14" fill-opacity="0.9"/>
+  <circle cx="150" cy="127" r="3.5" fill="#2C1F14" fill-opacity="0.9"/>
+  <!-- Glasses shine -->
+  <circle cx="124" cy="125" r="1.2" fill="white" fill-opacity="0.65"/>
+  <circle cx="152" cy="125" r="1.2" fill="white" fill-opacity="0.65"/>
+
+  <!-- Subtle smirk -->
+  <path d="M132,146 C135,151 145,151 148,146" stroke="#2C1F14" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- ═══════ WOK ═══════ -->
+  <!-- Flame / heat glow underneath -->
+  <path d="M104,316 C106,304 116,296 108,288 C105,296 100,292 103,284 C99,292 92,290 96,281 C89,290 84,294 88,305 C82,296 86,283 94,277 C86,287 80,290 84,302 C77,290 84,277 95,270 C108,252 128,247 140,247 C152,247 172,252 185,270 C196,277 203,290 196,302 C200,290 207,287 199,277 C207,283 211,296 205,305 C209,294 213,290 206,281 C210,290 203,292 200,284 C203,292 198,296 195,288 C187,296 197,304 199,316 Z"
+        fill="#E85D3A" fill-opacity="0.18" stroke="none"/>
+
+  <!-- Wok body -->
+  <path d="M66,296 C64,318 84,348 140,348 C196,348 216,318 214,296 C214,284 200,272 140,272 C80,272 66,284 66,296 Z"
+        stroke="#2C1F14" stroke-width="2.5" fill="url(#wokGlow)"/>
+
+  <!-- Wok rim (ellipse) -->
+  <ellipse cx="140" cy="274" rx="82" ry="16" stroke="#2C1F14" stroke-width="2" fill="#F5F0E8" fill-opacity="0.9"/>
+  <!-- Wok rim inner glow -->
+  <ellipse cx="140" cy="274" rx="74" ry="12" fill="url(#codeGlow)"/>
+
+  <!-- Wok handles -->
+  <path d="M66,296 C54,296 50,305 56,313 C60,319 68,314 72,308" stroke="#2C1F14" stroke-width="2" stroke-linecap="round"/>
+  <path d="M214,296 C226,296 230,305 224,313 C220,319 212,314 208,308" stroke="#2C1F14" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Wok tripod legs -->
+  <line x1="108" y1="346" x2="96" y2="368" stroke="#2C1F14" stroke-width="2" stroke-linecap="round"/>
+  <line x1="172" y1="346" x2="184" y2="368" stroke="#2C1F14" stroke-width="2" stroke-linecap="round"/>
+  <line x1="140" y1="348" x2="140" y2="370" stroke="#2C1F14" stroke-width="2" stroke-linecap="round"/>
+  <!-- Cross brace -->
+  <line x1="98" y1="362" x2="182" y2="362" stroke="#2C1F14" stroke-width="1.2" stroke-linecap="round" opacity="0.45"/>
+
+  <!-- Bubbles in wok -->
+  <circle cx="124" cy="270" r="3.5" stroke="#C44D2A" stroke-width="1.2" opacity="0.55"/>
+  <circle cx="148" cy="268" r="4.5" stroke="#2A9D8F" stroke-width="1.2" opacity="0.45"/>
+  <circle cx="160" cy="271" r="2.5" stroke="#8B4513" stroke-width="1" opacity="0.5"/>
+  <circle cx="136" cy="269" r="5.5" stroke="#C44D2A" stroke-width="1.2" opacity="0.3"/>
+
+  <!-- ═══════ RISING CODE — steam & symbols from wok ═══════ -->
+  <!-- Steam wisps (dashed paths curling upward) -->
+  <path d="M116,262 C113,248 120,237 115,222" stroke="#2C1F14" stroke-width="1" stroke-dasharray="2,3.5" stroke-linecap="round" opacity="0.18"/>
+  <path d="M140,259 C137,243 144,230 138,214" stroke="#2C1F14" stroke-width="1" stroke-dasharray="2,3.5" stroke-linecap="round" opacity="0.14"/>
+  <path d="M164,262 C168,246 160,234 165,218" stroke="#2C1F14" stroke-width="1" stroke-dasharray="2,3.5" stroke-linecap="round" opacity="0.18"/>
+
+  <!-- Lambda — the hero symbol, largest -->
+  <text x="130" y="261" font-family="monospace, 'Courier New'" font-size="20" font-weight="bold" fill="#C44D2A" opacity="0.9">λ</text>
+
+  <!-- Row 1 (just above wok) -->
+  <text x="156" y="259" font-family="monospace" font-size="8" fill="#2A9D8F" opacity="0.75">SQS</text>
+  <text x="112" y="255" font-family="monospace" font-size="8" fill="#8B4513" opacity="0.65">{ }</text>
+
+  <!-- Row 2 -->
+  <text x="148" y="244" font-family="monospace" font-size="8" fill="#2C1F14" opacity="0.55">Redis</text>
+  <text x="116" y="241" font-family="monospace" font-size="9" fill="#C44D2A" opacity="0.6">λ</text>
+
+  <!-- Row 3 -->
+  <text x="140" y="228" font-family="monospace" font-size="7.5" fill="#2A9D8F" opacity="0.45">Bull</text>
+  <text x="160" y="227" font-family="monospace" font-size="7" fill="#8B4513" opacity="0.4">&gt;_</text>
+  <text x="114" y="226" font-family="monospace" font-size="7" fill="#2C1F14" opacity="0.38">AWS</text>
+
+  <!-- Row 4 (faintest, highest) -->
+  <text x="134" y="213" font-family="monospace" font-size="7" fill="#C44D2A" opacity="0.32">10x ⚡</text>
+  <text x="155" y="211" font-family="monospace" font-size="6.5" fill="#2A9D8F" opacity="0.28">P95&lt;5ms</text>
+
+  <!-- ═══════ DECORATIVE UZUMAKI ACCENTS ═══════ -->
+  <!-- Top-right corner spiral -->
+  <g transform="translate(252,42)" opacity="0.22">
+    <path d="M0,0 C3,-10 14,-12 15,-5 C17,5 8,14 -1,13 C-12,12 -18,2 -15,-9 C-12,-22 0,-28 13,-24 C28,-18 34,-2 28,12"
+          stroke="#8B4513" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- Bottom-left spiral -->
+  <g transform="translate(32,342)" opacity="0.18">
+    <path d="M0,0 C2,-8 11,-9 12,-3 C13,5 6,11 -1,10 C-9,9 -13,2 -11,-7 C-9,-18 0,-22 10,-18 C22,-13 26,-1 21,9"
+          stroke="#2A9D8F" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- ═══════ CAPTION ═══════ -->
+  <text x="140" y="385" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif"
+        font-size="7" fill="#8B4513" opacity="0.48" letter-spacing="1.8">ARCHITECT OF SPIRALS · npm run cook()</text>
+</svg>

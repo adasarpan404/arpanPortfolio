@@ -12,6 +12,8 @@
       el.classList.remove('opacity-0');
       el.style.opacity = '1';
     });
+    const illus = document.querySelector('.hero-illustration-wrapper');
+    if (illus) illus.style.opacity = '1';
   }
 
   function onPageReady(callback) {
@@ -99,6 +101,11 @@
     gsap.fromTo('.avatar-sketch',
       { scale: 0.8, opacity: 0 },
       { scale: 1, opacity: 1, duration: 1, ease: 'back.out(1.4)' }
+    );
+
+    gsap.fromTo('.hero-illustration-wrapper',
+      { opacity: 0, x: 40, rotation: -3 },
+      { opacity: 1, x: 0, rotation: 0, duration: 1.2, delay: 1.8, ease: 'power3.out' }
     );
   }
 
