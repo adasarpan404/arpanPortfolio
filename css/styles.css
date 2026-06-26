@@ -855,6 +855,14 @@ body.no-custom-cursor {
     padding: 1.5rem;
   }
 
+  .throughput-benchmark {
+    display: none;
+  }
+
+  .scroll-indicator {
+    display: none;
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
