@@ -5,35 +5,62 @@
 
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const mobileMedia = window.matchMedia('(max-width: 768px)');
+
+  function revealHeroContent() {
+    document.querySelectorAll('.hero-tagline, .hero-cta, .hero-contact').forEach((el) => {
+      el.classList.remove('opacity-0');
+      el.style.opacity = '1';
+    });
+  }
+
+  function onPageReady(callback) {
+    if (document.readyState === 'complete') {
+      callback();
+      return;
+    }
+    window.addEventListener('load', callback, { once: true });
+  }
 
   // ─── Loading Screen ───
   function initLoading() {
     const loader = document.getElementById('loading-screen');
     if (!loader) return;
 
+    let dismissed = false;
+    const dismiss = () => {
+      if (dismissed) return;
+      dismissed = true;
+      loader.classList.add('hidden');
+      initHeroAnimations();
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.refresh();
+      }
+    };
+
     const spiral = loader.querySelector('.spiral-loader');
     if (spiral && !prefersReducedMotion) {
       gsap.to(spiral, { rotation: 360, duration: 2, repeat: -1, ease: 'none' });
     }
 
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        loader.classList.add('hidden');
-        initHeroAnimations();
-      }, 800);
-    });
+    onPageReady(() => setTimeout(dismiss, 800));
+    setTimeout(dismiss, 3000);
   }
 
   // ─── Hero Text "Writing" Animation ───
   function initHeroAnimations() {
     const title = document.querySelector('.hero-title');
-    if (!title || prefersReducedMotion) {
-      if (title) title.style.opacity = '1';
+    if (!title) return;
+
+    if (prefersReducedMotion) {
+      title.style.opacity = '1';
+      revealHeroContent();
       return;
     }
 
     const text = title.textContent;
     title.textContent = '';
+    title.classList.remove('opacity-0');
     title.style.opacity = '1';
 
     const chars = text.split('');
@@ -41,6 +68,8 @@
       const span = document.createElement('span');
       span.className = 'char';
       span.textContent = char === ' ' ? '\u00A0' : char;
+      span.style.opacity = '0';
+      span.style.transform = 'translateY(10px)';
       title.appendChild(span);
 
       gsap.to(span, {
@@ -52,41 +81,33 @@
       });
     });
 
-    gsap.from('.hero-tagline', {
-      opacity: 0,
-      y: 20,
-      duration: 1,
-      delay: 1.2,
-      ease: 'power3.out',
-    });
+    gsap.fromTo('.hero-tagline',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 1, delay: 1.2, stagger: 0.2, ease: 'power3.out' }
+    );
 
-    gsap.from('.hero-cta', {
-      opacity: 0,
-      y: 30,
-      duration: 0.8,
-      delay: 1.6,
-      stagger: 0.15,
-      ease: 'power3.out',
-    });
+    gsap.fromTo('.hero-cta',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.8, delay: 1.6, stagger: 0.15, ease: 'power3.out' }
+    );
 
-    gsap.from('.hero-contact', {
-      opacity: 0,
-      duration: 0.6,
-      delay: 2,
-    });
+    gsap.fromTo('.hero-contact',
+      { opacity: 0 },
+      { opacity: 1, duration: 0.6, delay: 2 }
+    );
 
-    gsap.from('.avatar-sketch', {
-      scale: 0.8,
-      opacity: 0,
-      duration: 1,
-      ease: 'back.out(1.4)',
-    });
+    gsap.fromTo('.avatar-sketch',
+      { scale: 0.8, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 1, ease: 'back.out(1.4)' }
+    );
   }
 
   // ─── ScrollTrigger Section Reveals ───
   function initScrollAnimations() {
+    const animatedSelectors = '.reveal-section, .pantry-card, .project-card, .article-card, .timeline-entry, .motif-card, .metamorphosis-panel, .sketch-frame';
+
     if (prefersReducedMotion || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      document.querySelectorAll('.reveal-section').forEach((el) => {
+      document.querySelectorAll(animatedSelectors).forEach((el) => {
         el.style.opacity = '1';
         el.style.transform = 'none';
       });
@@ -95,67 +116,111 @@
 
     gsap.registerPlugin(ScrollTrigger);
 
+    const isBelowFold = (el) => el.getBoundingClientRect().top > window.innerHeight * 0.85;
+
+    const hideBelowFold = (targets, fromVars) => {
+      gsap.utils.toArray(targets).forEach((el, i) => {
+        if (!isBelowFold(el)) return;
+        const from = typeof fromVars === 'function' ? fromVars(el, i) : fromVars;
+        gsap.set(el, from);
+      });
+    };
+
+    const scrollReveal = (targets, fromVars, toVars, triggerOpts = {}) => {
+      const elements = gsap.utils.toArray(targets);
+      if (!elements.length) return;
+
+      hideBelowFold(elements, fromVars);
+
+      const trigger = triggerOpts.trigger
+        || elements[0].closest('section')
+        || elements[0];
+
+      gsap.to(elements, {
+        opacity: 1,
+        y: 0,
+        x: 0,
+        scale: 1,
+        rotation: 0,
+        rotateX: 0,
+        ...toVars,
+        stagger: toVars.stagger || 0,
+        scrollTrigger: {
+          trigger,
+          start: triggerOpts.start || 'top 82%',
+          once: true,
+          toggleActions: 'play none none none',
+        },
+      });
+    };
+
     // Section unfurl effect
     gsap.utils.toArray('.reveal-section').forEach((section) => {
-      gsap.from(section, {
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 85%',
-          toggleActions: 'play none none reverse',
-        },
+      if (section.id === 'articles') return;
+
+      hideBelowFold([section], {
         opacity: 0,
-        y: 60,
-        rotateX: 8,
+        y: isMobile ? 50 : 70,
+        rotateX: isMobile ? 0 : 8,
+      });
+
+      gsap.to(section, {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
         duration: 1,
         ease: 'power3.out',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 82%',
+          once: true,
+        },
       });
     });
+
+    // Articles — stagger heading + cards together
+    const articlesSection = document.querySelector('#articles');
+    if (articlesSection) {
+      const articleItems = articlesSection.querySelectorAll('h2, .text-warm-brown, .text-center.mb-12, .article-card');
+      hideBelowFold(articleItems, { opacity: 0, y: 45 });
+
+      gsap.to(articleItems, {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+        stagger: 0.09,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: articlesSection,
+          start: 'top 78%',
+          once: true,
+        },
+      });
+    }
 
     // Pantry cards stagger
-    gsap.utils.toArray('.pantry-card').forEach((card, i) => {
-      gsap.from(card, {
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 90%',
-        },
-        opacity: 0,
-        y: 40,
-        rotation: (i % 2 === 0 ? -2 : 2),
-        duration: 0.7,
-        delay: i * 0.08,
-        ease: 'power2.out',
-      });
-    });
+    scrollReveal(
+      '.pantry-card',
+      (_, i) => ({ opacity: 0, y: 50, rotation: i % 2 === 0 ? -3 : 3 }),
+      { duration: 0.75, stagger: 0.1, ease: 'power2.out' },
+      { start: 'top 88%' }
+    );
 
     // Sketch motif images
-    gsap.utils.toArray('.motif-card, .metamorphosis-panel, .sketch-frame').forEach((el, i) => {
-      gsap.from(el, {
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 88%',
-        },
-        opacity: 0,
-        scale: 0.92,
-        duration: 0.7,
-        delay: i * 0.05,
-        ease: 'back.out(1.1)',
-      });
-    });
+    scrollReveal(
+      '.motif-card, .metamorphosis-panel, .sketch-frame',
+      { opacity: 0, scale: 0.9 },
+      { duration: 0.75, stagger: 0.08, ease: 'back.out(1.1)' },
+      { start: 'top 88%' }
+    );
 
     // Project cards
-    gsap.utils.toArray('.project-card').forEach((card, i) => {
-      gsap.from(card, {
-        scrollTrigger: {
-          trigger: card,
-          start: 'top 88%',
-        },
-        opacity: 0,
-        scale: 0.95,
-        duration: 0.8,
-        delay: i * 0.12,
-        ease: 'back.out(1.2)',
-      });
-    });
+    scrollReveal(
+      '.project-card',
+      { opacity: 0, y: 50, scale: 0.94 },
+      { duration: 0.85, stagger: 0.14, ease: 'back.out(1.2)' },
+      { start: 'top 88%' }
+    );
 
     // Timeline draw effect
     const timelineLine = document.querySelector('.timeline-svg-line');
@@ -177,34 +242,81 @@
     }
 
     // Timeline entries
-    gsap.utils.toArray('.timeline-entry').forEach((entry, i) => {
-      gsap.from(entry, {
-        scrollTrigger: {
-          trigger: entry,
-          start: 'top 85%',
-        },
-        opacity: 0,
-        x: -30,
-        duration: 0.6,
-        delay: i * 0.1,
-        ease: 'power2.out',
-      });
-    });
+    scrollReveal(
+      '.timeline-entry',
+      { opacity: 0, x: -40 },
+      { duration: 0.7, stagger: 0.12, ease: 'power2.out' },
+      { start: 'top 85%' }
+    );
 
-    // Parallax spirals
-    gsap.utils.toArray('.parallax-layer').forEach((layer) => {
-      const speed = parseFloat(layer.dataset.speed) || 0.3;
-      gsap.to(layer, {
+    initParallax();
+
+    onPageReady(() => ScrollTrigger.refresh());
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => ScrollTrigger.refresh(), 300);
+    });
+    mobileMedia.addEventListener('change', () => ScrollTrigger.refresh());
+  }
+
+  // ─── Parallax Depth Layers ───
+  function initParallax() {
+    if (prefersReducedMotion || typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      return;
+    }
+
+    const range = isMobile ? 240 : 380;
+
+    const applySpin = (el) => {
+      if (el.dataset.spin === 'none') return;
+
+      if (el.classList.contains('spin-reverse')) {
+        el.style.animation = 'none';
+        gsap.to(el, { rotation: -360, duration: 120, repeat: -1, ease: 'none' });
+        return;
+      }
+
+      if (el.classList.contains('spin-slow') || el.classList.contains('spiral-divider-img')) {
+        el.style.animation = 'none';
+        const duration = el.classList.contains('motif-float') ? 90
+          : el.classList.contains('spiral-divider-img') ? 45
+          : 60;
+        gsap.to(el, { rotation: 360, duration, repeat: -1, ease: 'none' });
+      }
+    };
+
+    gsap.utils.toArray('.parallax-layer, .parallax-content').forEach((el) => {
+      applySpin(el);
+
+      const speed = parseFloat(el.dataset.speed) || 0.3;
+      const speedX = parseFloat(el.dataset.speedX) || 0;
+      const trigger = el.closest('section, header, footer') || el.parentElement || document.body;
+
+      gsap.to(el, {
         scrollTrigger: {
-          trigger: layer.parentElement || document.body,
+          trigger,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: true,
+          scrub: isMobile ? 0.6 : 1.2,
         },
-        y: () => speed * 100,
+        y: speed * range,
+        x: speedX * range * 0.5,
         ease: 'none',
       });
     });
+
+    const paper = document.querySelector('.paper-canvas');
+    if (paper) {
+      gsap.to(paper, {
+        scrollTrigger: {
+          trigger: document.body,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: true,
+        },
+        y: isMobile ? 80 : 160,
+        ease: 'none',
+      });
+    }
   }
 
   // ─── Timeline Expand/Collapse ───
@@ -268,29 +380,6 @@
       el.addEventListener('mouseleave', () => {
         gsap.to(dot, { scale: 1, duration: 0.2 });
       });
-    });
-  }
-
-  // ─── Dark Mode Toggle ───
-  function initDarkMode() {
-    const toggle = document.getElementById('theme-toggle');
-    if (!toggle) return;
-
-    const saved = localStorage.getItem('manuscript-theme');
-    if (saved === 'dark') {
-      document.body.classList.add('dark-mode');
-      toggle.setAttribute('aria-pressed', 'true');
-    }
-
-    toggle.addEventListener('click', () => {
-      document.body.classList.toggle('dark-mode');
-      const isDark = document.body.classList.contains('dark-mode');
-      localStorage.setItem('manuscript-theme', isDark ? 'dark' : 'light');
-      toggle.setAttribute('aria-pressed', String(isDark));
-
-      if (!prefersReducedMotion) {
-        gsap.fromTo(document.body, { opacity: 0.9 }, { opacity: 1, duration: 0.4 });
-      }
     });
   }
 
@@ -363,6 +452,33 @@
     });
   }
 
+  // ─── Scroll Down Indicator ───
+  function initScrollIndicator() {
+    const indicator = document.querySelector('.scroll-indicator');
+    if (!indicator) return;
+
+    const hide = () => indicator.classList.add('is-hidden');
+
+    window.addEventListener('scroll', () => {
+      indicator.classList.toggle('is-hidden', window.scrollY > 80);
+    }, { passive: true });
+
+    indicator.addEventListener('click', hide);
+
+    if (!prefersReducedMotion && typeof gsap !== 'undefined') {
+      const chevron = indicator.querySelector('.scroll-indicator-chevron');
+      if (chevron) {
+        gsap.to(chevron, {
+          y: 10,
+          duration: 1.1,
+          repeat: -1,
+          yoyo: true,
+          ease: 'power1.inOut',
+        });
+      }
+    }
+  }
+
   // ─── Smooth anchor scroll offset for fixed nav ───
   function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
@@ -381,10 +497,13 @@
     initScrollAnimations();
     initTimeline();
     initCursor();
-    initDarkMode();
     initNav();
     initRateCounter();
     initFontJitter();
     initSmoothScroll();
+    initScrollIndicator();
+    onPageReady(() => {
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+    });
   });
 })();

@@ -89,27 +89,20 @@
     <p class="text-ink text-sm tracking-widest uppercase opacity-60">Unfurling manuscript…</p>
   </div>
 
-  <!-- Theme Toggle -->
-  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="5"/>
-      <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-    </svg>
-  </button>
-
   <!-- Navigation -->
   <nav class="site-nav" aria-label="Main navigation">
     <a href="#about">Journal</a>
     <a href="#pantry">Pantry</a>
     <a href="#experience">Kitchen</a>
     <a href="#projects">Recipes</a>
+    <a href="#articles">Marginalia</a>
     <a href="#education">Diploma</a>
     <a href="#contact">Connect</a>
   </nav>
 
   <!-- ═══════════════════ HERO ═══════════════════ -->
   <header id="hero" class="min-h-screen flex items-center justify-center relative overflow-hidden px-6">
-    <div class="max-w-4xl mx-auto text-center relative z-10">
+    <div class="max-w-4xl mx-auto text-center relative z-10 parallax-content" data-speed="-0.14">
       <!-- Pencil sketch avatar -->
       <div class="w-40 h-40 md:w-48 md:h-48 mx-auto mb-8 avatar-sketch">
         <img
@@ -159,7 +152,8 @@
       width="128"
       height="128"
       class="sketch-img motif-float spin-slow absolute bottom-10 right-6 md:right-10 w-20 md:w-32 opacity-20 md:opacity-25 parallax-layer"
-      data-speed="0.2"
+      data-speed="0.55"
+      data-speed-x="-0.12"
       aria-hidden="true"
       loading="lazy"
     >
@@ -169,7 +163,8 @@
       width="112"
       height="112"
       class="sketch-img motif-float spin-reverse absolute top-16 left-6 md:left-10 w-16 md:w-28 opacity-15 md:opacity-20 parallax-layer"
-      data-speed="0.15"
+      data-speed="0.42"
+      data-speed-x="0.1"
       aria-hidden="true"
       loading="lazy"
     >
@@ -178,17 +173,25 @@
       alt=""
       width="96"
       height="96"
-      class="sketch-img motif-float absolute bottom-32 left-4 md:left-16 w-14 md:w-24 opacity-10 md:opacity-15 parallax-layer hidden sm:block"
-      data-speed="0.1"
+      class="sketch-img motif-float spin-slow absolute bottom-32 left-4 md:left-16 w-14 md:w-24 opacity-10 md:opacity-15 parallax-layer"
+      data-speed="0.32"
+      data-speed-x="-0.06"
       aria-hidden="true"
       loading="lazy"
     >
+
+    <a href="#about" class="scroll-indicator" aria-label="Scroll down to explore">
+      <span>Scroll to explore</span>
+      <svg class="scroll-indicator-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </a>
   </header>
 
   <!-- Spiral Divider -->
   <div class="spiral-divider" aria-hidden="true">
     <svg width="80" height="20" viewBox="0 0 80 20"><line x1="0" y1="10" x2="30" y2="10"/></svg>
-    <img src="assets/uzumaki-spiral.png" alt="" width="56" height="56" class="sketch-img spiral-divider-img" loading="lazy">
+    <img src="assets/uzumaki-spiral.png" alt="" width="56" height="56" class="sketch-img spiral-divider-img parallax-layer" data-speed="0.22" data-speed-x="0.08" loading="lazy">
     <svg width="80" height="20" viewBox="0 0 80 20"><line x1="50" y1="10" x2="80" y2="10"/></svg>
   </div>
 
@@ -349,7 +352,7 @@
 
   <div class="spiral-divider px-6" aria-hidden="true">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="22" y2="10"/></svg>
-    <img src="assets/uzumaki-cluster.png" alt="" width="48" height="48" class="sketch-img spiral-divider-img opacity-60" loading="lazy">
+    <img src="assets/uzumaki-cluster.png" alt="" width="48" height="48" class="sketch-img spiral-divider-img opacity-60 parallax-layer" data-speed="-0.18" data-speed-x="-0.1" loading="lazy">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="38" y1="10" x2="60" y2="10"/></svg>
   </div>
 
@@ -363,7 +366,7 @@
         </div>
         <div class="sketch-frame w-20 h-20 md:w-24 md:h-24 flex-shrink-0 self-end">
           <div class="oil-wash"></div>
-          <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral — timeline motif" width="96" height="96" class="uzumaki-icon-img sketch-img spin-slow" loading="lazy">
+          <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral — timeline motif" width="96" height="96" class="uzumaki-icon-img sketch-img spin-slow parallax-layer" data-speed="0.28" data-speed-x="0.14" loading="lazy">
         </div>
       </div>
 
@@ -428,7 +431,7 @@
 
   <div class="spiral-divider px-6" aria-hidden="true">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="22" y2="10"/></svg>
-    <img src="assets/metamorphosis-beetle.png" alt="" width="52" height="52" class="sketch-img opacity-50 rounded-sm" loading="lazy">
+    <img src="assets/metamorphosis-beetle.png" alt="" width="52" height="52" class="sketch-img opacity-50 rounded-sm parallax-layer" data-speed="0.2" data-speed-x="0.12" data-spin="none" loading="lazy">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="38" y1="10" x2="60" y2="10"/></svg>
   </div>
 
@@ -479,7 +482,24 @@
           </div>
         </div>
 
-        <div class="project-card p-6 lg:col-span-2">
+        <div class="project-card p-6">
+          <div class="flex flex-wrap items-center gap-3 mb-3">
+            <h3 class="font-bold text-xl">stl-javascript</h3>
+            <span class="text-xs bg-teal-glow/10 text-teal-glow px-2 py-1 rounded">npm · Open Source</span>
+          </div>
+          <p class="text-sm text-ink/80 mb-4">
+            A concise, well-tested library of core data structures and algorithms for JavaScript — stacks, queues, priority queues, circular queues, segment trees, and binary search trees. Built for learning, teaching, and lightweight production use.
+          </p>
+          <div class="code-block mb-4">
+            <code>npm install stl-javascript</code>
+          </div>
+          <div class="flex gap-4 flex-wrap">
+            <a href="https://github.com/adasarpan404/stl-javascript" target="_blank" rel="noopener noreferrer" class="text-sm text-teal-glow hover:underline">View Source →</a>
+            <a href="https://www.npmjs.com/package/stl-javascript" target="_blank" rel="noopener noreferrer" class="text-sm text-teal-glow hover:underline">npm Registry →</a>
+          </div>
+        </div>
+
+        <div class="project-card p-6">
           <div class="flex flex-wrap items-center gap-3 mb-3">
             <h3 class="font-bold text-xl">OpenFeature.dev</h3>
             <span class="text-xs bg-warm-brown/20 text-warm-brown px-2 py-1 rounded">Open Source</span>
@@ -490,6 +510,83 @@
           <a href="https://openfeature.dev" target="_blank" rel="noopener noreferrer" class="text-sm text-teal-glow hover:underline">OpenFeature.dev →</a>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ ARTICLES ═══════════════════ -->
+  <section id="articles" class="py-20 md:py-28 px-6 reveal-section">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-ink mb-2 text-center">Marginalia</h2>
+      <p class="text-warm-brown italic text-center mb-4">Field notes on backends, systems, and the craft of building</p>
+      <p class="text-center mb-12">
+        <a href="https://adasarpan.hashnode.dev/" target="_blank" rel="noopener noreferrer" class="text-sm text-teal-glow hover:underline">Read all articles on Hashnode →</a>
+      </p>
+
+      <div class="space-y-4">
+        <a href="https://adasarpan.hashnode.dev/why-redis-lua-scripts-are-a-superpower-for-backend-engineers" target="_blank" rel="noopener noreferrer" class="article-card">
+          <div class="article-card-header">
+            <h3 class="article-card-title">Why Redis Lua Scripts Are a Superpower for Backend Engineers</h3>
+            <time class="article-card-date" datetime="2026-06-25">Jun 25, 2026</time>
+          </div>
+          <p class="article-card-excerpt">Execute multiple Redis commands atomically — fewer round trips, no race conditions, and server-side logic that scales to 50,000+ req/sec.</p>
+        </a>
+
+        <a href="https://adasarpan.hashnode.dev/why-some-rate-limiters-slow-down-your-api" target="_blank" rel="noopener noreferrer" class="article-card">
+          <div class="article-card-header">
+            <h3 class="article-card-title">Why Some Rate Limiters Slow Down Your API</h3>
+            <time class="article-card-date" datetime="2026-06-25">Jun 25, 2026</time>
+          </div>
+          <p class="article-card-excerpt">Not all rate limiting strategies are equal — a look at what actually costs latency under load and what doesn't.</p>
+        </a>
+
+        <a href="https://adasarpan.hashnode.dev/how-profile-guided-optimization-unlocks-next-level-performance" target="_blank" rel="noopener noreferrer" class="article-card">
+          <div class="article-card-header">
+            <h3 class="article-card-title">How Profile Guided Optimization Unlocks Next-Level Performance</h3>
+            <time class="article-card-date" datetime="2025-11-11">Nov 11, 2025</time>
+          </div>
+          <p class="article-card-excerpt">Using real runtime profiles to guide compiler optimizations and squeeze out performance you can't get from static analysis alone.</p>
+        </a>
+
+        <a href="https://adasarpan.hashnode.dev/how-to-create-and-verify-jwt-tokens-in-go" target="_blank" rel="noopener noreferrer" class="article-card">
+          <div class="article-card-header">
+            <h3 class="article-card-title">How To Create And Verify JWT Tokens in Go</h3>
+            <time class="article-card-date" datetime="2025-02-12">Feb 12, 2025</time>
+          </div>
+          <p class="article-card-excerpt">A practical walkthrough of signing, parsing, and validating JSON Web Tokens in Go — no magic, just crypto.</p>
+        </a>
+
+        <a href="https://adasarpan.hashnode.dev/building-an-http-client-in-go-from-scratch" target="_blank" rel="noopener noreferrer" class="article-card">
+          <div class="article-card-header">
+            <h3 class="article-card-title">Building An HTTP Client In Go From Scratch</h3>
+            <time class="article-card-date" datetime="2025-01-02">Jan 2, 2025</time>
+          </div>
+          <p class="article-card-excerpt">Understanding HTTP at the wire level by building a client yourself — requests, responses, headers, and connection handling.</p>
+        </a>
+
+        <a href="https://adasarpan.hashnode.dev/the-power-of-partitioning-in-data-management" target="_blank" rel="noopener noreferrer" class="article-card">
+          <div class="article-card-header">
+            <h3 class="article-card-title">The Power of Partitioning in Data Management</h3>
+            <time class="article-card-date" datetime="2023-09-20">Sep 20, 2023</time>
+          </div>
+          <p class="article-card-excerpt">How partitioning shapes query performance, scalability, and operational complexity in distributed data systems.</p>
+        </a>
+
+        <a href="https://adasarpan.hashnode.dev/leaderless-replication" target="_blank" rel="noopener noreferrer" class="article-card">
+          <div class="article-card-header">
+            <h3 class="article-card-title">Leaderless Replication</h3>
+            <time class="article-card-date" datetime="2023-09-11">Sep 11, 2023</time>
+          </div>
+          <p class="article-card-excerpt">Quorum reads and writes, eventual consistency, and the trade-offs of replication without a single leader node.</p>
+        </a>
+
+        <a href="https://adasarpan.hashnode.dev/solid-principles" target="_blank" rel="noopener noreferrer" class="article-card">
+          <div class="article-card-header">
+            <h3 class="article-card-title">SOLID Principles</h3>
+            <time class="article-card-date" datetime="2023-07-23">Jul 23, 2023</time>
+          </div>
+          <p class="article-card-excerpt">Single responsibility, open-closed, Liskov substitution, interface segregation, and dependency inversion — explained with examples.</p>
+        </a>
       </div>
     </div>
   </section>
@@ -538,9 +635,9 @@
 
       <div class="mt-16 pt-8 border-t border-ink/10">
         <div class="flex justify-center items-center gap-6 mb-6">
-          <img src="assets/uzumaki-cluster.png" alt="Uzumaki spiral cluster icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-slow" loading="lazy">
-          <img src="assets/metamorphosis-beetle.png" alt="Kafka Metamorphosis beetle icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-50" loading="lazy">
-          <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-reverse" loading="lazy">
+          <img src="assets/uzumaki-cluster.png" alt="Uzumaki spiral cluster icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-slow parallax-layer" data-speed="0.16" data-speed-x="-0.08" loading="lazy">
+          <img src="assets/metamorphosis-beetle.png" alt="Kafka Metamorphosis beetle icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-50 parallax-layer" data-speed="-0.12" data-spin="none" loading="lazy">
+          <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-reverse parallax-layer" data-speed="0.2" data-speed-x="0.1" loading="lazy">
         </div>
         <p class="text-xs text-ink/40">
           Crafted between commits & stir-fries · © 2026 Arpan Das
