@@ -8,6 +8,7 @@
   const isCompact = window.matchMedia('(max-width: 768px), (max-height: 820px)').matches;
   const mobileMedia = window.matchMedia('(max-width: 768px)');
   const compactMedia = window.matchMedia('(max-width: 768px), (max-height: 820px)');
+  const scrubSmoothing = isCompact ? false : 0.35;
 
   function revealHeroContent() {
     document.querySelectorAll('.hero-tagline, .hero-cta, .hero-contact').forEach((el) => {
@@ -26,6 +27,51 @@
     window.addEventListener('load', callback, { once: true });
   }
 
+  let smoothScrollRaf = 0;
+  let refreshTimer = 0;
+
+  function scheduleScrollRefresh() {
+    if (refreshTimer) clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => {
+      refreshTimer = 0;
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+    }, 150);
+  }
+
+  function cancelSmoothScroll() {
+    if (!smoothScrollRaf) return;
+    cancelAnimationFrame(smoothScrollRaf);
+    smoothScrollRaf = 0;
+    window.scrollTo(0, window.scrollY);
+  }
+
+  function scrollToTarget(target) {
+    cancelSmoothScroll();
+    const top = target.getBoundingClientRect().top + window.scrollY;
+    if (prefersReducedMotion || isCompact) {
+      window.scrollTo(0, top);
+      return;
+    }
+
+    const start = window.scrollY;
+    const distance = top - start;
+    const duration = Math.min(900, Math.max(400, Math.abs(distance) * 0.55));
+    const startTime = performance.now();
+
+    const step = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      window.scrollTo(0, start + distance * eased);
+      if (progress < 1) {
+        smoothScrollRaf = requestAnimationFrame(step);
+      } else {
+        smoothScrollRaf = 0;
+      }
+    };
+
+    smoothScrollRaf = requestAnimationFrame(step);
+  }
+
   // ─── Loading Screen ───
   function initLoading() {
     const loader = document.getElementById('loading-screen');
@@ -37,9 +83,7 @@
       dismissed = true;
       loader.classList.add('hidden');
       initHeroAnimations();
-      if (typeof ScrollTrigger !== 'undefined') {
-        ScrollTrigger.refresh();
-      }
+      scheduleScrollRefresh();
     };
 
     const spiral = loader.querySelector('.spiral-loader');
@@ -260,7 +304,8 @@
             trigger: '.timeline',
             start: 'top 70%',
             end: 'bottom 30%',
-            scrub: 1,
+            scrub: scrubSmoothing,
+            fastScrollEnd: true,
           },
           strokeDashoffset: 0,
           ease: 'none',
@@ -280,12 +325,10 @@
       initParallax();
     }
 
-    onPageReady(() => ScrollTrigger.refresh());
-    window.addEventListener('orientationchange', () => {
-      setTimeout(() => ScrollTrigger.refresh(), 300);
-    });
-    mobileMedia.addEventListener('change', () => ScrollTrigger.refresh());
-    compactMedia.addEventListener('change', () => ScrollTrigger.refresh());
+    onPageReady(scheduleScrollRefresh);
+    window.addEventListener('orientationchange', scheduleScrollRefresh);
+    mobileMedia.addEventListener('change', scheduleScrollRefresh);
+    compactMedia.addEventListener('change', scheduleScrollRefresh);
   }
 
   // ─── Parallax Depth Layers (desktop only — scrub parallax janks mobile scroll) ───
@@ -330,7 +373,8 @@
           trigger,
           start: 'top bottom',
           end: 'bottom top',
-          scrub: isCompact ? 0.6 : 1.2,
+          scrub: scrubSmoothing,
+          fastScrollEnd: true,
         },
         y: speed * range,
         x: speedX * range * 0.5,
@@ -345,7 +389,8 @@
           trigger: document.body,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: true,
+          scrub: scrubSmoothing,
+          fastScrollEnd: true,
         },
         y: isCompact ? 80 : 160,
         ease: 'none',
@@ -364,55 +409,39 @@
     });
   }
 
-  // ─── Custom Pencil Cursor ───
+  // ─── Custom Fork & Knife Cursor ───
   function initCursor() {
     if (isCompact) {
       document.body.classList.add('no-custom-cursor');
       return;
     }
 
-    const dot = document.querySelector('.cursor-dot');
-    const pencil = document.querySelector('.cursor-pencil');
-    const trail = document.querySelector('.cursor-trail');
-    if (!dot || !pencil || !trail) return;
+    const fork = document.querySelector('.cursor-fork');
+    if (!fork || typeof gsap === 'undefined') return;
 
-    let mouseX = 0;
-    let mouseY = 0;
-    let dotX = 0;
-    let dotY = 0;
+    gsap.set(fork, { xPercent: -50, yPercent: -35, scale: 1, rotation: 0 });
 
     document.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      pencil.style.left = mouseX + 'px';
-      pencil.style.top = mouseY + 'px';
-
-      if (!prefersReducedMotion && Math.random() > 0.7) {
-        const mark = document.createElement('div');
-        mark.className = 'trail-mark';
-        mark.style.left = mouseX + 'px';
-        mark.style.top = mouseY + 'px';
-        trail.appendChild(mark);
-        setTimeout(() => mark.remove(), 1200);
-      }
+      gsap.to(fork, {
+        x: e.clientX,
+        y: e.clientY,
+        opacity: 1,
+        duration: 0.12,
+        ease: 'power3.out',
+        overwrite: 'auto',
+      });
     });
 
-    function animateDot() {
-      dotX += (mouseX - dotX) * 0.15;
-      dotY += (mouseY - dotY) * 0.15;
-      dot.style.left = dotX + 'px';
-      dot.style.top = dotY + 'px';
-      requestAnimationFrame(animateDot);
-    }
-    animateDot();
+    document.documentElement.addEventListener('mouseleave', () => {
+      gsap.to(fork, { opacity: 0, duration: 0.15 });
+    });
 
     document.querySelectorAll('a, button, .timeline-entry, .pantry-card, .project-card').forEach((el) => {
       el.addEventListener('mouseenter', () => {
-        gsap.to(dot, { scale: 2, duration: 0.2 });
+        gsap.to(fork, { scale: 1.2, rotation: -8, duration: 0.2, overwrite: 'auto' });
       });
       el.addEventListener('mouseleave', () => {
-        gsap.to(dot, { scale: 1, duration: 0.2 });
+        gsap.to(fork, { scale: 1, rotation: 0, duration: 0.2, overwrite: 'auto' });
       });
     });
   }
@@ -545,14 +574,22 @@
     }
   }
 
-  // ─── Smooth anchor scroll offset for fixed nav ───
+  // ─── Smooth anchor scroll (cancellable — avoids fighting wheel/touch) ───
   function initSmoothScroll() {
+    window.addEventListener('wheel', cancelSmoothScroll, { passive: true });
+    window.addEventListener('touchstart', cancelSmoothScroll, { passive: true });
+    window.addEventListener('keydown', (e) => {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(e.key)) {
+        cancelSmoothScroll();
+      }
+    });
+
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener('click', (e) => {
         const target = document.querySelector(anchor.getAttribute('href'));
         if (!target) return;
         e.preventDefault();
-        target.scrollIntoView({ behavior: isCompact ? 'auto' : 'smooth', block: 'start' });
+        scrollToTarget(target);
       });
     });
   }
@@ -568,8 +605,6 @@
     initFontJitter();
     initSmoothScroll();
     initScrollIndicator();
-    onPageReady(() => {
-      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
-    });
+    onPageReady(scheduleScrollRefresh);
   });
 })();
