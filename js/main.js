@@ -594,6 +594,74 @@
     });
   }
 
+  // ─── Uzumaki Horror Theme ───
+  function initUzumakiTheme() {
+    const STORAGE_KEY = 'portfolio-theme';
+    const HORROR_SPEED = 4;
+    let spinTweens = [];
+
+    const isNight = () => { const h = new Date().getHours(); return h >= 19 || h <= 4; };
+    const saved   = () => { try { return localStorage.getItem(STORAGE_KEY); } catch { return null; } };
+    const save    = (v) => { try { localStorage.setItem(STORAGE_KEY, v); } catch {} };
+    const active  = () => document.body.classList.contains('dark-mode');
+
+    function collectSpinTweens() {
+      if (typeof gsap === 'undefined') return;
+      const els = new Set();
+      ['.spin-slow', '.spin-reverse', '.spiral-divider-img', '.motif-float', '.spiral-accent']
+        .forEach(s => document.querySelectorAll(s).forEach(e => els.add(e)));
+      spinTweens = gsap.globalTimeline
+        .getChildren(true, true, false)
+        .filter(t => t.targets && t.targets().some(e => els.has(e)));
+    }
+
+    function setSpeed(scale) {
+      spinTweens.forEach(t => t.timeScale(scale));
+    }
+
+    function updateButtons(isHorror) {
+      const btn = document.getElementById('uzumaki-toggle');
+      if (btn) btn.setAttribute('aria-pressed', isHorror ? 'true' : 'false');
+      const lbl = document.querySelector('#uzumaki-toggle .uzumaki-toggle-label');
+      if (lbl) lbl.textContent = isHorror ? 'Escape' : 'Uzumaki';
+    }
+
+    function applyHorror(withFlicker) {
+      document.body.classList.add('dark-mode');
+      setSpeed(HORROR_SPEED);
+      updateButtons(true);
+      if (withFlicker && !prefersReducedMotion && typeof gsap !== 'undefined') {
+        gsap.fromTo(document.body, { opacity: 0.92 }, {
+          opacity: 1, duration: 0.15, ease: 'none',
+          onComplete: () => gsap.to(document.body, { opacity: 0.96, duration: 0.1, yoyo: true, repeat: 1 })
+        });
+      }
+    }
+
+    function removeHorror() {
+      document.body.classList.remove('dark-mode');
+      setSpeed(1);
+      updateButtons(false);
+    }
+
+    function toggle() {
+      if (active()) { removeHorror(); save('light'); }
+      else           { applyHorror(true); save('uzumaki'); }
+    }
+
+    const btn = document.getElementById('uzumaki-toggle');
+    if (btn) btn.addEventListener('click', (e) => { e.preventDefault(); toggle(); });
+
+    // Reveal button after loading screen fades (~800ms after page load)
+    onPageReady(() => setTimeout(() => { if (btn) btn.classList.add('visible'); }, 900));
+
+    setTimeout(collectSpinTweens, 500);
+
+    const pref = saved();
+    if (pref === 'uzumaki') applyHorror(false);
+    else if (pref !== 'light' && isNight()) setTimeout(() => { if (!active()) applyHorror(false); }, 1800);
+  }
+
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', () => {
     initLoading();
@@ -605,6 +673,7 @@
     initFontJitter();
     initSmoothScroll();
     initScrollIndicator();
+    initUzumakiTheme();
     onPageReady(scheduleScrollRefresh);
   });
 })();

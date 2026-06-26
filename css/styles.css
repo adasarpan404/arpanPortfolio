@@ -12,12 +12,17 @@
   --pencil: rgba(44, 31, 20, 0.15);
 }
 
+/* ─── Uzumaki Horror Mode ─── */
 .dark-mode {
-  --paper: #1E1814;
-  --ink: #E8DFD0;
-  --oil-umber: #A0622E;
-  --warm-brown: #8B7355;
-  --pencil: rgba(232, 223, 208, 0.08);
+  --paper: #06080A;
+  --ink: #C8C4BC;
+  --oil-umber: #3A2A1A;
+  --warm-brown: #4A5C48;
+  --oil-red: #7A1818;
+  --ember: #5A1212;
+  --teal-glow: #2A7A5A;
+  --charcoal: #020304;
+  --pencil: rgba(60, 80, 55, 0.12);
 }
 
 *, *::before, *::after {
@@ -41,7 +46,8 @@ body {
   color: var(--ink);
   cursor: none;
   min-height: 100%;
-  transition: background-color 0.6s ease, color 0.6s ease;
+  transition: background-color 0.8s cubic-bezier(0.4, 0.0, 0.2, 1.05),
+              color 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
 
 body.no-custom-cursor {
@@ -81,6 +87,33 @@ body.no-custom-cursor {
   );
   opacity: 0.3;
   pointer-events: none;
+}
+
+/* Horror vignette — breathing darkness */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(6, 8, 10, 0) 55%,
+    rgba(6, 8, 10, 0.65) 100%
+  );
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.dark-mode body::before {
+  opacity: 1;
+  animation: horror-breathe 6s ease-in-out infinite;
+}
+
+@keyframes horror-breathe {
+  0%, 100% { opacity: 0.85; }
+  50%       { opacity: 1; }
 }
 
 /* Fork & knife cursor */
@@ -503,7 +536,13 @@ body.no-custom-cursor {
 
 .dark-mode .sketch-img {
   mix-blend-mode: screen;
-  filter: brightness(0.85) contrast(1.1);
+  filter: brightness(0.75) contrast(1.15) saturate(0.25) hue-rotate(160deg);
+  transition: filter 0.8s ease;
+}
+
+.dark-mode .sketch-img[src*="uzumaki"] {
+  filter: brightness(0.75) contrast(1.2) saturate(0.3) hue-rotate(140deg)
+          drop-shadow(0 0 14px rgba(42, 122, 90, 0.55));
 }
 
 .motif-float {
@@ -659,6 +698,14 @@ body.no-custom-cursor {
   animation: slow-spin 3s linear infinite;
 }
 
+/* ─── Horror mode: accelerated spiral spin ─── */
+.dark-mode .spin-slow                 { animation-duration: 15s !important; }
+.dark-mode .spin-reverse              { animation-duration: 20s !important; }
+.dark-mode .motif-float.spin-slow     { animation-duration: 22s !important; }
+.dark-mode .motif-float.spin-reverse  { animation-duration: 28s !important; }
+.dark-mode .spiral-divider-img        { animation-duration: 10s !important; }
+.dark-mode .spiral-accent             { animation-duration: 12s !important; opacity: 0.18 !important; }
+
 /* Nietzsche quote pulse */
 .will-to-power {
   animation: power-pulse 4s ease-in-out infinite;
@@ -752,7 +799,24 @@ body.no-custom-cursor {
 }
 
 .dark-mode .site-nav {
-  background: rgba(30, 24, 20, 0.9);
+  background: rgba(6, 8, 10, 0.92);
+  border-color: rgba(42, 122, 90, 0.25);
+}
+
+.dark-mode .site-nav a:hover,
+.dark-mode .site-nav a.active {
+  background: rgba(42, 122, 90, 0.12);
+}
+
+.dark-mode .mobile-nav {
+  background: rgba(6, 8, 10, 0.97);
+  border-top-color: rgba(42, 122, 90, 0.2);
+}
+
+.dark-mode .mobile-nav-link:hover,
+.dark-mode .mobile-nav-link.active {
+  background: rgba(42, 122, 90, 0.1);
+  color: var(--teal-glow);
 }
 
 .site-nav.visible {
@@ -905,6 +969,101 @@ body.no-custom-cursor {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+/* ─── Tailwind utility overrides for Uzumaki horror mode ─── */
+.dark-mode .text-ink           { color: var(--ink) !important; }
+.dark-mode .text-ink\/90       { color: rgba(200, 196, 188, 0.90) !important; }
+.dark-mode .text-ink\/80       { color: rgba(200, 196, 188, 0.80) !important; }
+.dark-mode .text-ink\/70       { color: rgba(200, 196, 188, 0.70) !important; }
+.dark-mode .text-ink\/60       { color: rgba(200, 196, 188, 0.60) !important; }
+.dark-mode .text-ink\/50       { color: rgba(200, 196, 188, 0.50) !important; }
+.dark-mode .text-ink\/40       { color: rgba(200, 196, 188, 0.40) !important; }
+.dark-mode .text-warm-brown    { color: var(--warm-brown) !important; }
+.dark-mode .text-oil-red       { color: var(--oil-red) !important; }
+.dark-mode .text-ember         { color: var(--ember) !important; }
+.dark-mode .text-teal-glow     { color: var(--teal-glow) !important; }
+.dark-mode .text-oil-umber     { color: var(--oil-umber) !important; }
+.dark-mode .text-paper         { color: var(--paper) !important; }
+.dark-mode .bg-paper           { background-color: var(--paper) !important; }
+.dark-mode .bg-ink             { background-color: var(--ink) !important; }
+.dark-mode .bg-charcoal        { background-color: var(--charcoal) !important; }
+.dark-mode .bg-teal-glow       { background-color: var(--teal-glow) !important; }
+.dark-mode .bg-oil-umber       { background-color: var(--oil-umber) !important; }
+.dark-mode .bg-teal-glow\/10   { background-color: rgba(42, 122, 90, 0.10) !important; }
+.dark-mode .bg-warm-brown\/20  { background-color: rgba(74, 92, 72, 0.20) !important; }
+.dark-mode .border-ink         { border-color: var(--ink) !important; }
+.dark-mode .border-ink\/10     { border-color: rgba(200, 196, 188, 0.10) !important; }
+.dark-mode .border-ink\/20     { border-color: rgba(200, 196, 188, 0.20) !important; }
+.dark-mode .border-teal-glow   { border-color: var(--teal-glow) !important; }
+.dark-mode .border-oil-red     { border-color: var(--oil-red) !important; }
+.dark-mode .hover\:bg-ink:hover        { background-color: var(--ink) !important; }
+.dark-mode .hover\:bg-teal-glow:hover  { background-color: var(--teal-glow) !important; }
+.dark-mode .hover\:text-paper:hover    { color: var(--paper) !important; }
+.dark-mode .hover\:text-teal-glow:hover { color: var(--teal-glow) !important; }
+
+/* ─── Uzumaki theme toggle — fixed top right ─── */
+.uzumaki-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1.25rem;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: var(--ink);
+  background: rgba(245, 240, 232, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  cursor: pointer;
+  border: 1px solid rgba(44, 31, 20, 0.2);
+  border-radius: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: color 0.3s ease, border-color 0.3s ease, background 0.3s ease,
+              box-shadow 0.3s ease, opacity 0.5s ease;
+}
+
+.uzumaki-toggle.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.uzumaki-toggle:hover {
+  background: rgba(245, 240, 232, 0.95);
+  border-color: var(--oil-umber);
+  box-shadow: 0 2px 12px rgba(44, 31, 20, 0.12);
+}
+
+.dark-mode .uzumaki-toggle {
+  color: var(--teal-glow);
+  background: rgba(6, 8, 10, 0.85);
+  border-color: rgba(42, 122, 90, 0.35);
+}
+
+.dark-mode .uzumaki-toggle:hover {
+  background: rgba(6, 8, 10, 0.95);
+  border-color: var(--teal-glow);
+  box-shadow: 0 2px 16px rgba(42, 122, 90, 0.2);
+}
+
+.uzumaki-toggle-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  transition: transform 0.4s ease;
+  flex-shrink: 0;
+}
+
+.dark-mode .uzumaki-toggle-icon {
+  animation: slow-spin 3s linear infinite;
+  filter: drop-shadow(0 0 4px rgba(42, 122, 90, 0.7));
 }
 
 /* Responsive — tablet */
