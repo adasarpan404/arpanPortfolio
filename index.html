@@ -39,38 +39,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            paper: '#F5F0E8',
-            ink: '#2C1F14',
-            'oil-umber': '#8B4513',
-            'warm-brown': '#C19A6B',
-            'oil-red': '#C44D2A',
-            ember: '#E85D3A',
-            'teal-glow': '#2A9D8F',
-            charcoal: '#1A1410',
-          },
-          fontFamily: {
-            sans: ['Space Grotesk', 'system-ui', 'sans-serif'],
-          },
-          animation: {
-            'slow-spin': 'slow-spin 60s linear infinite',
-          },
-          keyframes: {
-            'slow-spin': {
-              from: { transform: 'rotate(0deg)' },
-              to: { transform: 'rotate(360deg)' },
-            },
-          },
-        },
-      },
-    };
-  </script>
-
+  <link rel="stylesheet" href="css/tailwind.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -102,7 +71,7 @@
   <!-- Loading Screen -->
   <div id="loading-screen" class="loading-screen">
     <img
-      src="assets/uzumaki-spiral.png"
+      src="assets/uzumaki-spiral-256.webp"
       alt=""
       width="96"
       height="96"
@@ -137,7 +106,7 @@
   <!-- Uzumaki theme toggle — fixed top right -->
   <button id="uzumaki-toggle" class="uzumaki-toggle" type="button"
           aria-label="Toggle Uzumaki horror theme" title="The spiral consumes" aria-pressed="false">
-    <img src="assets/uzumaki-spiral.png" alt="" width="16" height="16"
+    <img src="assets/uzumaki-spiral-256.webp" alt="" width="16" height="16"
          class="uzumaki-toggle-icon" aria-hidden="true">
     <span class="uzumaki-toggle-label">Uzumaki</span>
   </button>
@@ -171,7 +140,7 @@
 
           <p class="mt-4 text-sm sm:text-base text-ink/70 max-w-xl mx-auto hero-tagline opacity-0 flex items-center justify-center flex-wrap gap-2 px-2">
             <span class="beetle-motif" title="Kafka's Metamorphosis — beetle to Lambda">
-              <img src="assets/metamorphosis-beetle.png" alt="Kafka Metamorphosis sketch — beetle transforming into Lambda" width="40" height="40" loading="lazy">
+              <img src="assets/metamorphosis-beetle-384.webp" alt="Kafka Metamorphosis sketch — beetle transforming into Lambda" width="40" height="40" loading="lazy">
             </span>
             Backend Software Engineer · 4+ Years · Node.js & AWS · Millions of Events Daily
           </p>
@@ -214,7 +183,7 @@
 
     <!-- Uzumaki spiral accents -->
     <img
-      src="assets/uzumaki-spiral.png"
+      src="assets/uzumaki-spiral-256.webp"
       alt=""
       width="128"
       height="128"
@@ -225,7 +194,7 @@
       loading="lazy"
     >
     <img
-      src="assets/uzumaki-cluster.png"
+      src="assets/uzumaki-cluster-256.webp"
       alt=""
       width="112"
       height="112"
@@ -236,7 +205,7 @@
       loading="lazy"
     >
     <img
-      src="assets/metamorphosis-beetle.png"
+      src="assets/metamorphosis-beetle-384.webp"
       alt=""
       width="96"
       height="96"
@@ -258,7 +227,7 @@
   <!-- Spiral Divider -->
   <div class="spiral-divider" aria-hidden="true">
     <svg width="80" height="20" viewBox="0 0 80 20"><line x1="0" y1="10" x2="30" y2="10"/></svg>
-    <img src="assets/uzumaki-spiral.png" alt="" width="56" height="56" class="sketch-img spiral-divider-img parallax-layer" data-speed="0.22" data-speed-x="0.08" loading="lazy">
+    <img src="assets/uzumaki-spiral-256.webp" alt="" width="56" height="56" class="sketch-img spiral-divider-img parallax-layer" data-speed="0.22" data-speed-x="0.08" loading="lazy">
     <svg width="80" height="20" viewBox="0 0 80 20"><line x1="50" y1="10" x2="80" y2="10"/></svg>
   </div>
 
@@ -287,7 +256,7 @@
           <div class="sketch-frame">
             <div class="oil-wash"></div>
             <img
-              src="assets/metamorphosis-beetle.png"
+              src="assets/metamorphosis-beetle-384.webp"
               alt="Hand-sketched Kafka Metamorphosis — beetle morphing into a Lambda function"
               width="200"
               height="200"
@@ -310,21 +279,21 @@
           <div class="motif-card">
             <div class="sketch-frame">
               <div class="oil-wash"></div>
-              <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral icon — infinite queue motif" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
+              <img src="assets/uzumaki-spiral-256.webp" alt="Uzumaki spiral icon — infinite queue motif" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
             </div>
             <p class="motif-caption">Uzumaki · Redis queues</p>
           </div>
           <div class="motif-card">
             <div class="sketch-frame">
               <div class="oil-wash"></div>
-              <img src="assets/uzumaki-cluster.png" alt="Uzumaki spiral cluster — distributed systems motif" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
+              <img src="assets/uzumaki-cluster-256.webp" alt="Uzumaki spiral cluster — distributed systems motif" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
             </div>
             <p class="motif-caption">Eternal loops · Bull jobs</p>
           </div>
           <div class="motif-card sm:col-span-2 md:col-span-1">
             <div class="sketch-frame">
               <div class="oil-wash"></div>
-              <img src="assets/metamorphosis-beetle.png" alt="Metamorphosis beetle to Lambda transformation icon" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
+              <img src="assets/metamorphosis-beetle-384.webp" alt="Metamorphosis beetle to Lambda transformation icon" width="120" height="120" class="uzumaki-icon-img sketch-img" loading="lazy">
             </div>
             <p class="motif-caption">Metamorphosis · Junior → Architect</p>
           </div>
@@ -419,7 +388,7 @@
 
   <div class="spiral-divider px-4 sm:px-6" aria-hidden="true">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="22" y2="10"/></svg>
-    <img src="assets/uzumaki-cluster.png" alt="" width="48" height="48" class="sketch-img spiral-divider-img opacity-60 parallax-layer" data-speed="-0.18" data-speed-x="-0.1" loading="lazy">
+    <img src="assets/uzumaki-cluster-256.webp" alt="" width="48" height="48" class="sketch-img spiral-divider-img opacity-60 parallax-layer" data-speed="-0.18" data-speed-x="-0.1" loading="lazy">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="38" y1="10" x2="60" y2="10"/></svg>
   </div>
 
@@ -433,7 +402,7 @@
         </div>
         <div class="sketch-frame w-20 h-20 md:w-24 md:h-24 flex-shrink-0 self-end">
           <div class="oil-wash"></div>
-          <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral — timeline motif" width="96" height="96" class="uzumaki-icon-img sketch-img spin-slow parallax-layer" data-speed="0.28" data-speed-x="0.14" loading="lazy">
+          <img src="assets/uzumaki-spiral-256.webp" alt="Uzumaki spiral — timeline motif" width="96" height="96" class="uzumaki-icon-img sketch-img spin-slow parallax-layer" data-speed="0.28" data-speed-x="0.14" loading="lazy">
         </div>
       </div>
 
@@ -498,7 +467,7 @@
 
   <div class="spiral-divider px-4 sm:px-6" aria-hidden="true">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="22" y2="10"/></svg>
-    <img src="assets/metamorphosis-beetle.png" alt="" width="52" height="52" class="sketch-img opacity-50 rounded-sm parallax-layer" data-speed="0.2" data-speed-x="0.12" data-spin="none" loading="lazy">
+    <img src="assets/metamorphosis-beetle-384.webp" alt="" width="52" height="52" class="sketch-img opacity-50 rounded-sm parallax-layer" data-speed="0.2" data-speed-x="0.12" data-spin="none" loading="lazy">
     <svg width="60" height="20" viewBox="0 0 60 20"><line x1="38" y1="10" x2="60" y2="10"/></svg>
   </div>
 
@@ -516,7 +485,7 @@
             <div class="flex-1">
               <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-3">
                 <div class="sketch-frame w-12 h-12 p-1 flex-shrink-0">
-                  <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral — Limitly rate limiter icon" width="40" height="40" class="uzumaki-icon-img sketch-img spiral-loader" loading="lazy">
+                  <img src="assets/uzumaki-spiral-256.webp" alt="Uzumaki spiral — Limitly rate limiter icon" width="40" height="40" class="uzumaki-icon-img sketch-img spiral-loader" loading="lazy">
                 </div>
                 <h3 class="font-bold text-xl sm:text-2xl w-full sm:w-auto">Limitly</h3>
                 <span class="text-xs bg-teal-glow/10 text-teal-glow px-2 py-1 rounded">npm · Open Source</span>
@@ -702,9 +671,9 @@
 
       <div class="mt-16 pt-8 border-t border-ink/10">
         <div class="flex justify-center items-center gap-6 mb-6">
-          <img src="assets/uzumaki-cluster.png" alt="Uzumaki spiral cluster icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-slow parallax-layer" data-speed="0.16" data-speed-x="-0.08" loading="lazy">
-          <img src="assets/metamorphosis-beetle.png" alt="Kafka Metamorphosis beetle icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-50 parallax-layer" data-speed="-0.12" data-spin="none" loading="lazy">
-          <img src="assets/uzumaki-spiral.png" alt="Uzumaki spiral icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-reverse parallax-layer" data-speed="0.2" data-speed-x="0.1" loading="lazy">
+          <img src="assets/uzumaki-cluster-256.webp" alt="Uzumaki spiral cluster icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-slow parallax-layer" data-speed="0.16" data-speed-x="-0.08" loading="lazy">
+          <img src="assets/metamorphosis-beetle-384.webp" alt="Kafka Metamorphosis beetle icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-50 parallax-layer" data-speed="-0.12" data-spin="none" loading="lazy">
+          <img src="assets/uzumaki-spiral-256.webp" alt="Uzumaki spiral icon" width="64" height="64" class="sketch-img w-14 h-14 opacity-60 spin-reverse parallax-layer" data-speed="0.2" data-speed-x="0.1" loading="lazy">
         </div>
         <p class="text-xs text-ink/40">
           Crafted between commits & stir-fries · © 2026 Arpan Das

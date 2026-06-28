@@ -29,6 +29,23 @@
 
   let smoothScrollRaf = 0;
   let refreshTimer = 0;
+  const scrollListeners = [];
+
+  function onScroll(callback) {
+    scrollListeners.push(callback);
+  }
+
+  function initScrollHub() {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        scrollListeners.forEach((fn) => fn());
+        ticking = false;
+      });
+    }, { passive: true });
+  }
 
   function scheduleScrollRefresh() {
     if (refreshTimer) clearTimeout(refreshTimer);
@@ -86,13 +103,14 @@
       scheduleScrollRefresh();
     };
 
-    const spiral = loader.querySelector('.spiral-loader');
-    if (spiral && !prefersReducedMotion) {
-      gsap.to(spiral, { rotation: 360, duration: 2, repeat: -1, ease: 'none' });
-    }
-
     onPageReady(() => setTimeout(dismiss, 800));
     setTimeout(dismiss, 3000);
+
+    loader.addEventListener('transitionend', (e) => {
+      if (e.propertyName === 'opacity' && loader.classList.contains('hidden')) {
+        loader.remove();
+      }
+    }, { once: true });
   }
 
   // ─── Hero Text "Writing" Animation ───
@@ -339,30 +357,10 @@
 
     const range = isCompact ? 240 : 380;
 
-    const applySpin = (el) => {
-      if (el.dataset.spin === 'none') return;
-
-      if (el.classList.contains('spin-reverse')) {
-        el.style.animation = 'none';
-        gsap.to(el, { rotation: -360, duration: 120, repeat: -1, ease: 'none' });
-        return;
-      }
-
-      if (el.classList.contains('spin-slow') || el.classList.contains('spiral-divider-img')) {
-        el.style.animation = 'none';
-        const duration = el.classList.contains('motif-float') ? 90
-          : el.classList.contains('spiral-divider-img') ? 45
-          : 60;
-        gsap.to(el, { rotation: 360, duration, repeat: -1, ease: 'none' });
-      }
-    };
-
     gsap.utils.toArray('.parallax-layer, .parallax-content').forEach((el) => {
       if (isCompact && el.classList.contains('parallax-content') && el.closest('#hero')) {
         return;
       }
-
-      applySpin(el);
 
       const speed = parseFloat(el.dataset.speed) || 0.3;
       const speedX = parseFloat(el.dataset.speedX) || 0;
@@ -419,30 +417,37 @@
     const fork = document.querySelector('.cursor-fork');
     if (!fork || typeof gsap === 'undefined') return;
 
-    gsap.set(fork, { xPercent: -50, yPercent: -35, scale: 1, rotation: 0 });
+    fork.style.transform = 'translate(-50%, -35%) scale(1) rotate(0deg)';
+
+    let cursorX = 0;
+    let cursorY = 0;
+    let cursorRaf = 0;
+
+    const paintCursor = () => {
+      cursorRaf = 0;
+      fork.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -35%) scale(${fork.dataset.scale || 1}) rotate(${fork.dataset.rotate || 0}deg)`;
+      fork.style.opacity = '1';
+    };
 
     document.addEventListener('mousemove', (e) => {
-      gsap.to(fork, {
-        x: e.clientX,
-        y: e.clientY,
-        opacity: 1,
-        duration: 0.12,
-        ease: 'power3.out',
-        overwrite: 'auto',
-      });
-    });
+      cursorX = e.clientX;
+      cursorY = e.clientY;
+      if (!cursorRaf) cursorRaf = requestAnimationFrame(paintCursor);
+    }, { passive: true });
 
     document.documentElement.addEventListener('mouseleave', () => {
-      gsap.to(fork, { opacity: 0, duration: 0.15 });
+      fork.style.opacity = '0';
     });
 
+    const setCursorState = (scale, rotate) => {
+      fork.dataset.scale = scale;
+      fork.dataset.rotate = rotate;
+      if (!cursorRaf) paintCursor();
+    };
+
     document.querySelectorAll('a, button, .timeline-entry, .pantry-card, .project-card').forEach((el) => {
-      el.addEventListener('mouseenter', () => {
-        gsap.to(fork, { scale: 1.2, rotation: -8, duration: 0.2, overwrite: 'auto' });
-      });
-      el.addEventListener('mouseleave', () => {
-        gsap.to(fork, { scale: 1, rotation: 0, duration: 0.2, overwrite: 'auto' });
-      });
+      el.addEventListener('mouseenter', () => setCursorState(1.2, -8));
+      el.addEventListener('mouseleave', () => setCursorState(1, 0));
     });
   }
 
@@ -462,26 +467,20 @@
       });
     };
 
-    let navTicking = false;
-    window.addEventListener('scroll', () => {
-      if (navTicking) return;
-      navTicking = true;
-      requestAnimationFrame(() => {
-        if (nav) {
-          nav.classList.toggle('visible', window.scrollY > window.innerHeight * 0.5);
-        }
+    onScroll(() => {
+      if (nav) {
+        nav.classList.toggle('visible', window.scrollY > window.innerHeight * 0.5);
+      }
 
-        const offset = window.innerHeight * 0.35;
-        let current = sectionIds[0];
-        sections.forEach((section) => {
-          if (section.getBoundingClientRect().top <= offset) {
-            current = section.id;
-          }
-        });
-        setActive(current);
-        navTicking = false;
+      const offset = window.innerHeight * 0.35;
+      let current = sectionIds[0];
+      sections.forEach((section) => {
+        if (section.getBoundingClientRect().top <= offset) {
+          current = section.id;
+        }
       });
-    }, { passive: true });
+      setActive(current);
+    });
 
     if (mobileNav) {
       mobileNav.addEventListener('click', (e) => {
@@ -554,24 +553,11 @@
 
     const hide = () => indicator.classList.add('is-hidden');
 
-    window.addEventListener('scroll', () => {
+    onScroll(() => {
       indicator.classList.toggle('is-hidden', window.scrollY > 80);
-    }, { passive: true });
+    });
 
     indicator.addEventListener('click', hide);
-
-    if (!prefersReducedMotion && typeof gsap !== 'undefined') {
-      const chevron = indicator.querySelector('.scroll-indicator-chevron');
-      if (chevron) {
-        gsap.to(chevron, {
-          y: 10,
-          duration: 1.1,
-          repeat: -1,
-          yoyo: true,
-          ease: 'power1.inOut',
-        });
-      }
-    }
   }
 
   // ─── Smooth anchor scroll (cancellable — avoids fighting wheel/touch) ───
@@ -597,27 +583,11 @@
   // ─── Uzumaki Horror Theme ───
   function initUzumakiTheme() {
     const STORAGE_KEY = 'portfolio-theme';
-    const HORROR_SPEED = 4;
-    let spinTweens = [];
 
     const isNight = () => { const h = new Date().getHours(); return h >= 19 || h <= 4; };
     const saved   = () => { try { return localStorage.getItem(STORAGE_KEY); } catch { return null; } };
     const save    = (v) => { try { localStorage.setItem(STORAGE_KEY, v); } catch {} };
     const active  = () => document.body.classList.contains('dark-mode');
-
-    function collectSpinTweens() {
-      if (typeof gsap === 'undefined') return;
-      const els = new Set();
-      ['.spin-slow', '.spin-reverse', '.spiral-divider-img', '.motif-float', '.spiral-accent']
-        .forEach(s => document.querySelectorAll(s).forEach(e => els.add(e)));
-      spinTweens = gsap.globalTimeline
-        .getChildren(true, true, false)
-        .filter(t => t.targets && t.targets().some(e => els.has(e)));
-    }
-
-    function setSpeed(scale) {
-      spinTweens.forEach(t => t.timeScale(scale));
-    }
 
     function updateButtons(isHorror) {
       const btn = document.getElementById('uzumaki-toggle');
@@ -628,7 +598,6 @@
 
     function applyHorror(withFlicker) {
       document.body.classList.add('dark-mode');
-      setSpeed(HORROR_SPEED);
       updateButtons(true);
       if (withFlicker && !prefersReducedMotion && typeof gsap !== 'undefined') {
         gsap.fromTo(document.body, { opacity: 0.92 }, {
@@ -640,7 +609,6 @@
 
     function removeHorror() {
       document.body.classList.remove('dark-mode');
-      setSpeed(1);
       updateButtons(false);
     }
 
@@ -655,15 +623,30 @@
     // Reveal button after loading screen fades (~800ms after page load)
     onPageReady(() => setTimeout(() => { if (btn) btn.classList.add('visible'); }, 900));
 
-    setTimeout(collectSpinTweens, 500);
-
     const pref = saved();
     if (pref === 'uzumaki') applyHorror(false);
     else if (pref !== 'light' && isNight()) setTimeout(() => { if (!active()) applyHorror(false); }, 1800);
   }
 
+  function initVisibilityPause() {
+    const pause = () => {
+      const hidden = document.hidden;
+      document.body.classList.toggle('page-hidden', hidden);
+      if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.getAll().forEach((st) => {
+          if (hidden) st.disable(false, false);
+          else st.enable(false, false);
+        });
+      }
+    };
+    document.addEventListener('visibilitychange', pause);
+    pause();
+  }
+
   // ─── Init ───
   document.addEventListener('DOMContentLoaded', () => {
+    initScrollHub();
+    initVisibilityPause();
     initLoading();
     initScrollAnimations();
     initTimeline();

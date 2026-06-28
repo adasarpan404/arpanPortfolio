@@ -128,7 +128,7 @@ body::before {
   user-select: none;
   z-index: 10002;
   opacity: 0;
-  will-change: transform;
+  transition: opacity 0.15s ease;
   filter: drop-shadow(0 1px 1px rgba(44, 31, 20, 0.12));
 }
 
@@ -705,6 +705,20 @@ body::before {
 .dark-mode .motif-float.spin-reverse  { animation-duration: 28s !important; }
 .dark-mode .spiral-divider-img        { animation-duration: 10s !important; }
 .dark-mode .spiral-accent             { animation-duration: 12s !important; opacity: 0.18 !important; }
+.dark-mode .spiral-loader             { animation-duration: 0.75s !important; }
+
+/* Pause decorative loops while tab is hidden — saves CPU/RAM */
+.page-hidden .spin-slow,
+.page-hidden .spin-reverse,
+.page-hidden .spiral-divider-img,
+.page-hidden .spiral-accent,
+.page-hidden .spiral-loader,
+.page-hidden .scroll-indicator-chevron,
+.page-hidden .steam-line,
+.page-hidden .will-to-power,
+.page-hidden .uzumaki-toggle-icon {
+  animation-play-state: paused;
+}
 
 /* Nietzsche quote pulse */
 .will-to-power {
@@ -946,10 +960,21 @@ body::before {
   opacity: 0.8;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-indicator-chevron {
+    animation: chevron-bounce 1.1s ease-in-out infinite;
+  }
+}
+
+@keyframes chevron-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+}
+
 /* Parallax layers */
 .parallax-layer,
 .parallax-content {
-  will-change: transform;
+  contain: layout style;
 }
 
 /* Loading screen */
